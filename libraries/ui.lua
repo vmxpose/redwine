@@ -34,15 +34,6 @@ local function shortTween(obj, goal, t)
     TweenService:Create(obj, ti, goal):Play()
 end
 
--- Utility: cached text size calculation
-local function _getTextSize(window, text, size, font)
-    local key = text .. "_" .. tostring(size) .. "_" .. tostring(font)
-    if not window._textSizeCache[key] then
-        window._textSizeCache[key] = _TextService:GetTextSize(text, size, font, Vector2.new(2000, 2000))
-    end
-    return window._textSizeCache[key]
-end
-
 -- Utility: rounding with decimals precision (decimals = number of decimal places)
 local function roundTo(value, decimals)
     local mul = 10 ^ (decimals or 0)
@@ -83,8 +74,6 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
     window._tabs = {}
     window._sectors = {}
     window._keybinds = {}
-    window._inputCallbacks = {} -- Centralized input handling
-    window._textSizeCache = {} -- Cache text measurements
     window.ThemeChanged = Instance.new("BindableEvent")
     
     window.name = name or "New Window"
@@ -116,11 +105,6 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
     track(window, UserInputService.InputBegan, function(key, gp)
         if not gp and key.KeyCode == window.hidebutton then
             window.Main.Enabled = not window.Main.Enabled
-        end
-        
-        -- Centralized input handling for all window keybinds
-        for _, callback in pairs(window._inputCallbacks) do
-            pcall(callback, key, gp)
         end
     end)
 
@@ -231,9 +215,6 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
             pcall(function() c:Disconnect() end)
         end
         self._connections = {}
-        table.clear(self._accentCallbacks)
-        table.clear(self._inputCallbacks)
-        table.clear(self._textSizeCache)
         if self.Main then self.Main:Destroy() end
     end
 
@@ -248,8 +229,8 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
         local tab = { }
         tab.name = name or ""
 
-        local textservice = _TextService
-        local size = _getTextSize(window, tab.name, window.textsize, Enum.Font.Code)
+        local textservice = game:GetService("TextService")
+        local size = textservice:GetTextSize(tab.name, window.textsize, Enum.Font.Code, Vector2.new(200,300))
 
         tab.TabButton = Instance.new("TextButton", window.TabList)
         tab.TabButton.TextColor3 = Color3.fromRGB(230, 230, 230)
@@ -594,9 +575,7 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
                         keybind.Main.Text = "..."
                     end)
 
-                    -- Use centralized input handling instead of separate connection
-                    local inputId = #window._inputCallbacks + 1
-                    window._inputCallbacks[inputId] = function(input, gameProcessed)
+                    game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                         if not gameProcessed then
                             if keybind.Main.Text == "..." then
                                 if input.UserInputType == Enum.UserInputType.Keyboard then
@@ -612,12 +591,7 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
                                 end
                             end
                         end
-                    end
-                    
-                    -- Cleanup function to remove callback when keybind is destroyed
-                    keybind._cleanup = function()
-                        window._inputCallbacks[inputId] = nil
-                    end
+                    end)
 
                     return keybind
                 end
@@ -797,7 +771,7 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
                         end
                     end)
     
-                    track(window, UserInputService.InputChanged, function(input)
+                    game:GetService("UserInputService").InputChanged:Connect(function(input)
                         if dragging_selector and input.UserInputType == Enum.UserInputType.MouseMovement then
                             colorpicker:RefreshSelector()
                         end
@@ -1279,7 +1253,7 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
                     end
                 end)
 
-                track(window, UserInputService.InputChanged, function(input)
+                game:GetService("UserInputService").InputChanged:Connect(function(input)
                     if dragging_selector and input.UserInputType == Enum.UserInputType.MouseMovement then
                         colorpicker:RefreshSelector()
                     end
@@ -1366,9 +1340,7 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
                     pcall(keybind.newkeycallback, value)
                 end
 
-                -- Use centralized input handling
-                local inputId = #window._inputCallbacks + 1
-                window._inputCallbacks[inputId] = function(input, gameProcessed)
+                game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                     if not gameProcessed then
                         if keybind.Bind.Text == "..." then
                             if input.UserInputType == Enum.UserInputType.Keyboard then
@@ -1385,12 +1357,7 @@ function library:CreateWindow(name,accentcolor,accentcolor2,textsize,sizeX,sizeY
                             end
                         end
                     end
-                end
-                
-                -- Cleanup function
-                keybind._cleanup = function()
-                    window._inputCallbacks[inputId] = nil
-                end
+                end)
 
                 sector.Main.Size = UDim2.fromOffset(window.size.X.Offset / 2 - 17, sector.ListLayout.AbsoluteContentSize.Y + 18)
                 tab.TabPage.CanvasSize = sector.Main.Size
