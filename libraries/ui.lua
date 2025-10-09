@@ -58,6 +58,7 @@ function redwine.new(redwineSettings)
         BackgroundColor3 = window.theme.topbar.background,
         BackgroundTransparency = window.theme.topbar.backgroundtransparency,
         BorderSizePixel = 0,
+        Visible = true,
         Parent = window.main_frame
     })
 
@@ -103,7 +104,7 @@ function redwine.new(redwineSettings)
         Padding = window.theme.tab_buttons.listlayout.padding
     })
 
-    
+
     return window;
 end
 
