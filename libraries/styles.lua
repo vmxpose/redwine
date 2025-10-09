@@ -15,8 +15,8 @@ styles.default = {
             ColorSequence = ColorSequence.new{
                 ColorSequenceKeypoint.new(0, Color3.fromRGB(75,75,75)),
                 ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150,150,150)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150,150,150)),
-                ColorSequenceKeypoint.new(0.75, Color3.fromRGB(75,75,75))
+                ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150,150,150)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(75,75,75))
             },
             Rotation = 90
         },
