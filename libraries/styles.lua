@@ -16,7 +16,7 @@ styles.default = {
                 ColorSequenceKeypoint.new(0, Color3.fromRGB(75,75,75)),
                 ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150,150,150)),
                 ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150,150,150)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(75,75,75))
+                ColorSequenceKeypoint.new(1.0, Color3.fromRGB(75,75,75))
             },
             Rotation = 90
         },
@@ -31,7 +31,7 @@ styles.default = {
         gradient = {
             ColorSequence = ColorSequence.new{
                 ColorSequenceKeypoint.new(0, Color3.fromRGB(255,255,255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(150,150,150))
+                ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150,150,150))
             },
             Rotation = 90
         },
@@ -47,7 +47,7 @@ styles.default = {
         gradient = {
             ColorSequence = ColorSequence.new{
                 ColorSequenceKeypoint.new(0, Color3.fromRGB(150,150,150)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))
+                ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255,255,255))
             },
             Rotation = 0
         },
