@@ -17,6 +17,7 @@ function helpers.appendUICorner(uiElement, radius)
         CornerRadius = UDim.new(0, radius)
     })
     uiCorner.Parent = uiElement
+    return uiCorner
 end
 
 -- function to append new uistroke to a uielement with specified color, thickness, stroke mode, and line join mode
@@ -28,6 +29,7 @@ function helpers.appendUIStroke(uiElement, color, thickness, strokeMode, lineJoi
         LineJoinMode = lineJoinMode
     })
     uiStroke.Parent = uiElement
+    return uiStroke
 end
 
 -- function to apply uigradient with specified color sequence with keypoints and rotation
@@ -37,6 +39,7 @@ function helpers.applyUIGradient(uiElement, colorSequence, rotation)
         Rotation = rotation
     })
     uiGradient.Parent = uiElement
+    return uiGradient
 end
 
 -- function to apply drag functionality to a frame that carries the entire ui
@@ -84,12 +87,14 @@ end
 function helpers.applyPadding(uiElement, paddingValues)
     local uiPadding = helpers.createInstance("UIPadding", paddingValues)
     uiPadding.Parent = uiElement
+    return uiPadding
 end
 
 -- function to apply list layout to a frame with specified properties
 function helpers.applyListLayout(uiElement, properties)
     local uiListLayout = helpers.createInstance("UIListLayout", properties)
     uiListLayout.Parent = uiElement
+    return uiListLayout
 end
 
 return helpers
