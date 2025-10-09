@@ -47,7 +47,7 @@ function redwine.new(redwineSettings)
 
     helpers.appendUICorner(window.main_frame, window.theme.main_frame.cornerRadius)
     helpers.appendUIStroke(window.main_frame, window.theme.main_frame.stroke.color, window.theme.main_frame.stroke.thickness, window.theme.main_frame.stroke.strokeMode, window.theme.main_frame.stroke.lineJoinMode)
-    helpers.applyUIGradient(window.main_frame, redwine.styles.gradients.main_frame.ColorSequence, redwine.styles.gradients.main_frame.Rotation)
+    helpers.applyUIGradient(window.main_frame, window.theme.main_frame.gradient.ColorSequence, window.theme.main_frame.gradient.Rotation)
 
     -- make topbar size of main frame's width and 35 pixels in height
     window.topbar = helpers.createInstance("Frame", {
