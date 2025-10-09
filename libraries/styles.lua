@@ -52,10 +52,10 @@ styles.default = {
             Rotation = 0
         },
         padding = {
-            bottom = 0,
-            left = 15,
-            right = 0,
-            top = 0
+            bottom = UDim.new(0, 0),
+            left = UDim.new(0, 15),
+            right = UDim.new(0, 0),
+            top = UDim.new(0, 0)
         },
         anchorPoint = Vector2.new(0, 0.5),
         size = UDim2.new(1, 0, 0, 35),
