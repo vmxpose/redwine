@@ -97,4 +97,13 @@ function helpers.applyListLayout(uiElement, properties)
     return uiListLayout
 end
 
+-- function to tween object with specified properties
+function helpers.tweenObject(object, properties, duration, easingStyle, easingDirection)
+    local TweenService = game:GetService("TweenService")
+    local tweenInfo = TweenInfo.new(duration, easingStyle, easingDirection)
+    local tween = TweenService:Create(object, tweenInfo, properties)
+    tween:Play()
+    return tween
+end
+
 return helpers
