@@ -1312,6 +1312,7 @@ function redwine.new(redwineSettings)
         tab.button.MouseEnter:Connect(
             function()
                 if tab._tabsEntry then tab._tabsEntry._hover = true end
+                if tab.visible == true then return end
                 helpers.tweenObject(
                     tab.button,
                     {TextColor3 = window.theme.tab_button.hover.textColor},
@@ -1337,6 +1338,7 @@ function redwine.new(redwineSettings)
         tab.button.MouseLeave:Connect(
             function()
                 if tab._tabsEntry then tab._tabsEntry._hover = false end
+                if tab.visible == true then return end
                 helpers.tweenObject(
                     tab.button,
                     {TextColor3 = window.theme.tab_button.off.textColor},
