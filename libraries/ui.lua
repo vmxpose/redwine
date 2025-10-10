@@ -1430,11 +1430,37 @@ function redwine.new(redwineSettings)
                 FS.setAutoload(v and name or "")
             end
         })
+
+        local configsDropdown = cardFiles:dropdown({
+            name = "configs_list",
+            variant = "inline",
+            label = "Configs",
+            items = self:listConfigs(),
+            multi = false,
+            onChanged = function(sel)
+                local picked = type(sel) == "table" and sel[1] or sel
+                if picked and picked ~= "" then
+                    currentName = picked
+                    if nameBox and nameBox.textbox then nameBox.textbox.Text = picked end
+                    -- update autoload toggle to reflect selection
+                    local auto = FS.getAutoload()
+                    local should = auto.enabled and auto.name == picked
+                    if overwriteToggle and type(overwriteToggle.set) == "function" then end -- no-op, just to silence unused
+                    if autoToggle and type(autoToggle) == "table" then
+                        -- reflect value visually
+                        if autoToggle.value ~= should then
+                            autoToggle.value = should
+                            helpers.tweenObject(autoToggle.button, {ImageTransparency = should and 0 or 1}, 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                        end
+                    end
+                end
+            end
+        })
                 
 
-        local function refreshList(dropdown)
+        local function refreshList()
             local items = self:listConfigs()
-            dropdown:set(items)
+            configsDropdown:set(items)
         end
 
         -- Save/Load/Refresh buttons
@@ -1478,32 +1504,6 @@ function redwine.new(redwineSettings)
             end
             refreshList()
         end })
-
-        local configsDropdown = cardFiles:dropdown({
-            name = "configs_list",
-            variant = "inline",
-            label = "Configs",
-            items = self:listConfigs(),
-            multi = false,
-            onChanged = function(sel)
-                local picked = type(sel) == "table" and sel[1] or sel
-                if picked and picked ~= "" then
-                    currentName = picked
-                    if nameBox and nameBox.textbox then nameBox.textbox.Text = picked end
-                    -- update autoload toggle to reflect selection
-                    local auto = FS.getAutoload()
-                    local should = auto.enabled and auto.name == picked
-                    if overwriteToggle and type(overwriteToggle.set) == "function" then end -- no-op, just to silence unused
-                    if autoToggle and type(autoToggle) == "table" then
-                        -- reflect value visually
-                        if autoToggle.value ~= should then
-                            autoToggle.value = should
-                            helpers.tweenObject(autoToggle.button, {ImageTransparency = should and 0 or 1}, 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                        end
-                    end
-                end
-            end
-        })
 
         -- Config files list and selection
         
