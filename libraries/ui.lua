@@ -227,94 +227,6 @@ function redwine.new(redwineSettings)
 
     local tabs = {}
 
-    -- HttpService for JSON encode/decode
-    local HttpService = game:GetService("HttpService")
-
-    -- Simple filesystem abstraction for common executor APIs
-    local FS = {}
-    local BASE_DIR = "redwine"
-    local CFG_DIR = BASE_DIR .. "/configs"
-    local AUTOLOAD_FILE = CFG_DIR .. "/_autoload.json"
-
-    local function _safe(fn, ...)
-        if not fn then return nil end
-        local ok, res = pcall(fn, ...)
-        if ok then return res end
-        return nil
-    end
-
-    -- ensure folders (best effort)
-    if _safe(isfolder, BASE_DIR) ~= true then _safe(makefolder, BASE_DIR) end
-    if _safe(isfolder, CFG_DIR) ~= true then _safe(makefolder, CFG_DIR) end
-
-    function FS.path(name)
-        return CFG_DIR .. "/" .. tostring(name) .. ".json"
-    end
-    function FS.exists(name)
-        return _safe(isfile, FS.path(name)) and true or false
-    end
-    function FS.list()
-        local out = {}
-        local files = _safe(listfiles, CFG_DIR) or {}
-        for _, f in ipairs(files) do
-            local name = tostring(f)
-            -- strip directory and extension
-            local base = name:match("([^/\\]+)$") or name
-            if base ~= "_autoload.json" then
-                local n = base:gsub("%.json$", "")
-                table.insert(out, n)
-            end
-        end
-        table.sort(out)
-        return out
-    end
-    function FS.save(name, tbl, overwrite)
-        if not name or name == "" then return false, "empty name" end
-        local p = FS.path(name)
-        if not overwrite and _safe(isfile, p) then return false, "exists" end
-        local json = HttpService:JSONEncode(tbl)
-        _safe(writefile, p, json)
-        return true
-    end
-    function FS.load(name)
-        local p = FS.path(name)
-        if not _safe(isfile, p) then return nil end
-        local s = _safe(readfile, p)
-        if not s then return nil end
-        local ok, data = pcall(function() return HttpService:JSONDecode(s) end)
-        if ok then return data end
-        return nil
-    end
-    function FS.delete(name)
-        return _safe(delfile, FS.path(name)) and true or false
-    end
-    function FS.rename(oldName, newName, overwrite)
-        if not oldName or not newName or oldName == newName then return false, "bad names" end
-        local oldP = FS.path(oldName)
-        local newP = FS.path(newName)
-        if not _safe(isfile, oldP) then return false, "missing source" end
-        if (not overwrite) and _safe(isfile, newP) then return false, "target exists" end
-        local content = _safe(readfile, oldP)
-        if not content then return false, "read failed" end
-        _safe(writefile, newP, content)
-        _safe(delfile, oldP)
-        return true
-    end
-    function FS.setAutoload(name)
-        local data = { enabled = name ~= nil and name ~= "", name = name or "" }
-        local json = HttpService:JSONEncode(data)
-        _safe(writefile, AUTOLOAD_FILE, json)
-        return true
-    end
-    function FS.getAutoload()
-        if not _safe(isfile, AUTOLOAD_FILE) then return {enabled=false,name=""} end
-        local s = _safe(readfile, AUTOLOAD_FILE)
-        if not s then return {enabled=false,name=""} end
-        local ok, data = pcall(function() return HttpService:JSONDecode(s) end)
-        if ok and type(data) == "table" then return data end
-        return {enabled=false,name=""}
-    end
-
     -- Utilities to update existing UI objects without duplicating adorners
     local function getFirstChildOfClass(inst, className)
         for _, ch in ipairs(inst:GetChildren()) do
@@ -379,122 +291,202 @@ function redwine.new(redwineSettings)
         return l
     end
 
-    -- Control registry to collect stateful components for config save/load
-    window._controls = {}
-    function window:_registerControl(name, control)
-        if type(name) ~= "string" or name == "" then return end
-        self._controls[name] = control
-    end
+    -- =========================
+    -- Config system primitives
+    -- =========================
+    local HttpService = game:GetService("HttpService")
 
-    -- Value serialization helpers
-    local function colorToHex(c)
+    window._components = {} -- [name] = { kind = string, api = { get=function, set=function } }
+    window.configPath = "redwine/configs"
+    window.autoloadFile = window.configPath .. "/_autoload.txt"
+    window._pendingConfig = nil -- loaded values waiting for late-registered components
+
+    local function toHexColor(c)
+        if typeof(c) ~= "Color3" then return nil end
         local r = math.floor(c.R * 255 + 0.5)
         local g = math.floor(c.G * 255 + 0.5)
         local b = math.floor(c.B * 255 + 0.5)
         return string.format("#%02X%02X%02X", r, g, b)
     end
-    local function hexToColor(hex)
-        if type(hex) ~= "string" then return nil end
-        local r,g,b = hex:match("#?(%x%x)(%x%x)(%x%x)")
+    local function fromHexColor(s)
+        if typeof(s) == "Color3" then return s end
+        if type(s) ~= "string" then return nil end
+        local r, g, b = s:match("#?(%x%x)(%x%x)(%x%x)")
         if not r then return nil end
         return Color3.fromRGB(tonumber(r,16), tonumber(g,16), tonumber(b,16))
     end
-    local function encodeValue(v)
-        local tv = typeof(v)
-        if tv == "Color3" then return {t="c3", v=colorToHex(v)} end
-        if tv == "EnumItem" then return {t="key", v=v.Name} end
-        if type(v) == "table" then return {t="tbl", v=v} end
-        return v
-    end
-    local function decodeValue(v)
-        if type(v) ~= "table" or v.t == nil then return v end
-        if v.t == "c3" then return hexToColor(v.v) end
-        if v.t == "key" then return Enum.KeyCode[v.v] end
-        if v.t == "tbl" then return v.v end
-        return v
+
+    function window:_serializeValue(kind, v)
+        if kind == "colorpicker" then
+            return toHexColor(v)
+        elseif kind == "keybind" then
+            if typeof(v) == "EnumItem" then return v.Name end
+            if type(v) == "string" then return v end
+            return nil
+        else
+            return v
+        end
     end
 
-    function window:saveConfig(name, opts)
-        opts = opts or {}
-        local overwrite = opts.overwrite == true
-        local values = {}
-        for key, ctrl in pairs(self._controls) do
-            local getter = ctrl.get or ctrl.Get or ctrl.value -- try common patterns
-            local val
-            if type(getter) == "function" then
-                local ok, res = pcall(function() return ctrl:get() end)
-                if ok then val = res end
-            elseif getter ~= nil then
-                val = getter
-            end
-            if val ~= nil then
-                values[key] = encodeValue(val)
+    function window:_deserializeValue(kind, v)
+        if kind == "colorpicker" and type(v) == "string" then
+            return fromHexColor(v)
+        elseif kind == "keybind" then
+            if typeof(v) == "EnumItem" then return v end
+            if type(v) == "string" then return Enum.KeyCode[v] end
+            return nil
+        else
+            return v
+        end
+    end
+
+    function window:_ensureConfigFolder()
+        if typeof(isfolder) == "function" and not isfolder(self.configPath) then
+            if typeof(makefolder) == "function" then pcall(makefolder, self.configPath) end
+        end
+    end
+
+    function window:_registerComponent(kind, name, api)
+        if type(name) ~= "string" or name == "" or type(api) ~= "table" then return end
+        self._components[name] = { kind = kind, api = api }
+        -- if we loaded a config before this control registered, apply now
+        if self._pendingConfig and self._pendingConfig[name] ~= nil then
+            local v = self:_deserializeValue(kind, self._pendingConfig[name])
+            task.defer(function()
+                pcall(function() api.set(v) end)
+            end)
+        end
+    end
+
+    function window:getConfigSnapshot()
+        local data = {}
+        for name, entry in pairs(self._components) do
+            local ok, val = pcall(function() return entry.api.get() end)
+            if ok then
+                data[name] = self:_serializeValue(entry.kind, val)
             end
         end
-        local payload = { _meta = { version = 1 }, values = values }
-        local ok, err = FS.save(name, payload, overwrite)
-        return ok == true, err
+        return data
     end
 
-    function window:_applyConfig(payload)
-        if not payload or type(payload.values) ~= "table" then return false end
-        for key, enc in pairs(payload.values) do
-            local ctrl = self._controls[key]
-            if ctrl and type(ctrl.set) == "function" then
-                local val = decodeValue(enc)
-                -- pcall to protect against type mismatches
-                pcall(function() ctrl:set(val) end)
+    function window:listConfigs()
+        self:_ensureConfigFolder()
+        local out = {}
+        if typeof(listfiles) == "function" then
+            local ok, files = pcall(listfiles, self.configPath)
+            if ok and type(files) == "table" then
+                for _, p in ipairs(files) do
+                    local n = p:match("([^/\\]+)%.json$")
+                    if n then table.insert(out, n) end
+                end
+            end
+        end
+        table.sort(out)
+        return out
+    end
+
+    function window:saveConfig(name, overwrite)
+        name = tostring(name or ""):gsub("[^%w%-%._]", "_")
+        if name == "" then return false, "invalid name" end
+        self:_ensureConfigFolder()
+        local path = self.configPath .. "/" .. name .. ".json"
+        if not overwrite and typeof(isfile) == "function" and isfile(path) then
+            return false, "exists"
+        end
+        local json = HttpService:JSONEncode(self:getConfigSnapshot())
+        if typeof(writefile) ~= "function" then return false, "writefile unavailable" end
+        local ok, err = pcall(writefile, path, json)
+        return ok, err
+    end
+
+    function window:loadConfig(name)
+        if type(name) ~= "string" or name == "" then return false, "invalid name" end
+        local path = self.configPath .. "/" .. name .. ".json"
+        if typeof(isfile) ~= "function" or not isfile(path) then return false, "not found" end
+        if typeof(readfile) ~= "function" then return false, "readfile unavailable" end
+        local ok, raw = pcall(readfile, path)
+        if not ok then return false, "read failed" end
+        local ok2, data = pcall(HttpService.JSONDecode, HttpService, raw)
+        if not ok2 or type(data) ~= "table" then return false, "decode failed" end
+        -- store for late-registered components
+        self._pendingConfig = data
+        -- apply to already registered
+        for cname, entry in pairs(self._components) do
+            local v = data[cname]
+            if v ~= nil then
+                local dv = self:_deserializeValue(entry.kind, v)
+                pcall(function() entry.api.set(dv) end)
             end
         end
         return true
     end
 
-    function window:loadConfig(name)
-        local payload = FS.load(name)
-        if not payload then return false, "not found" end
-        local ok = self:_applyConfig(payload)
-        return ok, ok and nil or "apply failed"
-    end
-
-    function window:renameConfig(oldName, newName, opts)
-        opts = opts or {}
-        local overwrite = opts.overwrite == true
-        local ok, err = FS.rename(oldName, newName, overwrite)
-        if ok then
-            local auto = FS.getAutoload()
-            if auto.enabled and auto.name == oldName then FS.setAutoload(newName) end
-        end
-        return ok, err
+    function window:renameConfig(oldName, newName, overwrite)
+        if type(oldName) ~= "string" or oldName == "" then return false, "invalid source" end
+        newName = tostring(newName or ""):gsub("[^%w%-%._]", "_")
+        if newName == "" then return false, "invalid target" end
+        self:_ensureConfigFolder()
+        local opath = self.configPath .. "/" .. oldName .. ".json"
+        local npath = self.configPath .. "/" .. newName .. ".json"
+        if typeof(isfile) ~= "function" or not isfile(opath) then return false, "source not found" end
+        if not overwrite and isfile(npath) then return false, "target exists" end
+        if typeof(readfile) ~= "function" or typeof(writefile) ~= "function" then return false, "fs unavailable" end
+        local ok, data = pcall(readfile, opath)
+        if not ok then return false, "read failed" end
+        local okw = pcall(writefile, npath, data)
+        if not okw then return false, "write failed" end
+        if typeof(delfile) == "function" then pcall(delfile, opath) end
+        local al = self:getAutoloadName()
+        if al == oldName then self:setAutoload(newName) end
+        return true
     end
 
     function window:deleteConfig(name)
-        local ok = FS.delete(name)
-        if ok then
-            local auto = FS.getAutoload()
-            if auto.enabled and auto.name == name then FS.setAutoload("") end
+        if type(name) ~= "string" or name == "" then return false, "invalid name" end
+        self:_ensureConfigFolder()
+        local path = self.configPath .. "/" .. name .. ".json"
+        if typeof(isfile) == "function" and isfile(path) and typeof(delfile) == "function" then
+            pcall(delfile, path)
         end
-        return ok
+        if self:getAutoloadName() == name then self:setAutoload(nil) end
+        return true
     end
 
-    function window:listConfigs()
-        return FS.list()
-    end
-
-    function window:setAutoloadConfig(name)
-        return FS.setAutoload(name)
-    end
-
-    function window:getAutoloadConfig()
-        return FS.getAutoload()
-    end
-
-    function window:tryAutoloadConfig()
-        local auto = FS.getAutoload()
-        if auto.enabled and auto.name and auto.name ~= "" then
-            self:loadConfig(auto.name)
+    function window:setAutoload(name)
+        self:_ensureConfigFolder()
+        if name == nil or name == "" then
+            if typeof(isfile) == "function" and typeof(delfile) == "function" and isfile(self.autoloadFile) then
+                pcall(delfile, self.autoloadFile)
+            end
             return true
         end
-        return false
+        if typeof(writefile) ~= "function" then return false, "writefile unavailable" end
+        local ok, err = pcall(writefile, self.autoloadFile, tostring(name))
+        return ok, err
+    end
+
+    function window:getAutoloadName()
+        if typeof(isfile) ~= "function" or typeof(readfile) ~= "function" then return nil end
+        if not isfile(self.autoloadFile) then return nil end
+        local ok, data = pcall(readfile, self.autoloadFile)
+        if ok and type(data) == "string" then
+            data = data:gsub("%s+$", "")
+            if data ~= "" then return data end
+        end
+        return nil
+    end
+
+    function window:applyAutoload()
+        local n = self:getAutoloadName()
+        if n then self:loadConfig(n) end
+    end
+
+    function window:_initConfigSystem()
+        self:_ensureConfigFolder()
+        -- apply autoload after initial UI settles so components can register
+        task.defer(function()
+            pcall(function() self:applyAutoload() end)
+        end)
     end
 
     -- Apply the current theme to core window parts and tabs
@@ -1391,123 +1383,149 @@ function redwine.new(redwineSettings)
         return tab
     end
 
-    -- Create a "Configs" tab to manage saving/loading user settings
-    function window:initializeConfigTab()
-        local tab = self:createTab({ name = "Configs" })
+    -- Create a "Config" tab to manage saving/loading UI state
+    function window:initializeConfigTab(options)
+        options = options or {}
 
-        -- State
+        local tab = self:createTab({ name = options.name or "Config" })
+
+        -- Save/Load card
+        local cardMain = tab:createCard({ title = "Configs", section = "left" })
+
         local currentName = ""
         local overwrite = false
-        local autoload = FS.getAutoload()
 
-        -- Controls
-        local cardManage = tab:createCard({ title = "Manage", section = "left" })
-        local cardFiles = tab:createCard({ title = "Files", section = "right" })
-
-        -- Input for config name
-        local nameBox = cardManage:inlinetextbox({
-            name = "config_name",
+        -- Name input
+        local nameBox = cardMain:inlinetextbox({
+            name = "cfg_name",
             subtext = "Name",
-            text = "",
-            placeholder = "my-config"
+            placeholder = "config name",
+            text = options.defaultName or "",
+            post = {"Text"},
+            callback = function(txt) currentName = txt end,
         })
+        currentName = nameBox:get()
 
         -- Overwrite toggle
-        local overwriteToggle = cardManage:checkboxtoggle({
-            name = "overwrite_toggle",
-            text = "Overwrite existing on Save",
+        local overwriteToggle = cardMain:checkboxtoggle({
+            name = "cfg_overwrite",
+            text = "Overwrite existing",
             default = false,
-            callback = function(v) overwrite = v end
+            callback = function(v) overwrite = v end,
         })
 
-        -- Autoload toggle and selection
-        local autoToggle = cardManage:checkboxtoggle({
-            name = "autoload_toggle",
-            text = "Autoload at startup",
-            default = autoload.enabled,
-            callback = function(v)
-                local name = currentName ~= "" and currentName or (FS.getAutoload().name or "")
-                FS.setAutoload(v and name or "")
-            end
+        -- Buttons row
+        local saveBtn = cardMain:button({
+            name = "cfg_save",
+            text = "Save",
+            callback = function()
+                local ok, err = self:saveConfig(currentName, overwrite)
+                print("[config] save:", currentName, ok, err)
+                self:_applyTheme()
+                refreshList()
+            end,
         })
 
-        local configsDropdown = cardFiles:dropdown({
-            name = "configs_list",
+        local loadBtn = cardMain:button({
+            name = "cfg_load",
+            text = "Load",
+            callback = function()
+                local ok, err = self:loadConfig(currentName)
+                print("[config] load:", currentName, ok, err)
+            end,
+        })
+
+        local delBtn = cardMain:button({
+            name = "cfg_delete",
+            text = "Delete",
+            callback = function()
+                local ok, err = self:deleteConfig(currentName)
+                print("[config] delete:", currentName, ok, err)
+                refreshList()
+            end,
+        })
+
+        -- Rename
+        local newName = ""
+        local renameBox = cardMain:inlinetextbox({
+            name = "cfg_newname",
+            subtext = "Rename to",
+            placeholder = "new name",
+            text = "",
+            post = {"Text"},
+            callback = function(txt) newName = txt end,
+        })
+        local renameBtn = cardMain:button({
+            name = "cfg_rename",
+            text = "Rename",
+            callback = function()
+                local ok, err = self:renameConfig(currentName, newName, overwrite)
+                print("[config] rename:", currentName, "->", newName, ok, err)
+                if ok then currentName = newName; nameBox:set(newName) end
+                refreshList()
+            end,
+        })
+
+        -- List and Autoload on right
+        local cardList = tab:createCard({ title = "Available", section = "right" })
+        local available = {}
+        local listDrop = cardList:dropdown({
+            name = "cfg_list",
             variant = "inline",
             label = "Configs",
-            items = self:listConfigs(),
+            items = {},
             multi = false,
-            onChanged = function(sel)
-                local picked = type(sel) == "table" and sel[1] or sel
-                if picked and picked ~= "" then
-                    currentName = picked
-                    if nameBox and nameBox.textbox then nameBox.textbox.Text = picked end
-                    -- update autoload toggle to reflect selection
-                    local auto = FS.getAutoload()
-                    local should = auto.enabled and auto.name == picked
-                    if overwriteToggle and type(overwriteToggle.set) == "function" then end -- no-op, just to silence unused
-                    if autoToggle and type(autoToggle) == "table" then
-                        -- reflect value visually
-                        if autoToggle.value ~= should then
-                            autoToggle.value = should
-                            helpers.tweenObject(autoToggle.button, {ImageTransparency = should and 0 or 1}, 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                        end
-                    end
+            placeholder = "select a config",
+            onChanged = function(selected)
+                local first = (type(selected) == "table" and selected[1]) or selected
+                if type(first) == "string" then
+                    currentName = first
+                    nameBox:set(first)
                 end
-            end
+            end,
         })
-                
 
-        local function refreshList()
-            local items = self:listConfigs()
-            configsDropdown:set(items)
+        local autoloadCard = tab:createCard({ title = "Autoload", section = "right" })
+        local autoloadName = self:getAutoloadName() or ""
+        local autoloadBox = autoloadCard:inlinetextbox({
+            name = "cfg_autoname",
+            subtext = "Autoload name",
+            placeholder = "name to autoload",
+            text = autoloadName,
+            post = {"Text"},
+            callback = function(txt) autoloadName = txt end,
+        })
+        local setAutoBtn = autoloadCard:button({
+            name = "cfg_setauto",
+            text = "Set Autoload",
+            callback = function()
+                local n = autoloadBox:get()
+                local ok, err = self:setAutoload(n ~= "" and n or nil)
+                print("[config] set autoload:", n, ok, err)
+            end,
+        })
+        local applyAutoBtn = autoloadCard:button({
+            name = "cfg_applyauto",
+            text = "Apply Autoload",
+            callback = function()
+                self:applyAutoload()
+            end,
+        })
+
+        -- helper to refresh dropdown items
+        function refreshList()
+            available = self:listConfigs()
+            listDrop.settings.items = available
+            -- simple refresh: destroy and recreate item buttons from settings
+            -- use existing dropdown setter to re-render text
+            if currentName == "" and available[1] then
+                currentName = available[1]
+                nameBox:set(currentName)
+            end
+            listDrop:set(currentName ~= "" and {currentName} or {})
         end
 
-        -- Save/Load/Refresh buttons
-        local saveBtn = cardManage:button({ name = "save_config", text = "Save" , callback = function()
-            currentName = nameBox and nameBox.textbox and nameBox.textbox.Text or currentName
-            if not currentName or currentName == "" then return end
-            local ok, err = self:saveConfig(currentName, { overwrite = overwrite })
-            refreshList()
-            if autoToggle and autoToggle.value then FS.setAutoload(currentName) end
-        end })
-
-        local loadBtn = cardManage:button({ name = "load_config", text = "Load" , callback = function()
-            currentName = nameBox and nameBox.textbox and nameBox.textbox.Text or currentName
-            if not currentName or currentName == "" then return end
-            self:loadConfig(currentName)
-        end })
-
-        local deleteBtn = cardManage:button({ name = "delete_config", text = "Delete" , callback = function()
-            local nm = nameBox and nameBox.textbox and nameBox.textbox.Text or ""
-            if nm == "" then return end
-            self:deleteConfig(nm)
-            if currentName == nm then currentName = "" end
-            refreshList()
-        end })
-
-        local renameBox = cardManage:inlinetextbox({
-            name = "rename_to",
-            subtext = "Rename to",
-            text = "",
-            placeholder = "new-name"
-        })
-
-        local renameBtn = cardManage:button({ name = "rename_config", text = "Rename", callback = function()
-            local from = nameBox and nameBox.textbox and nameBox.textbox.Text or ""
-            local to = renameBox and renameBox.textbox and renameBox.textbox.Text or ""
-            if from == "" or to == "" then return end
-            local ok = self:renameConfig(from, to, { overwrite = overwrite })
-            if ok then
-                currentName = to
-                nameBox.textbox.Text = to
-            end
-            refreshList()
-        end })
-
-        -- Config files list and selection
-        
-
+        refreshList()
         return tab
     end
 
@@ -2064,14 +2082,6 @@ function redwine.new(redwineSettings)
                     end
                 )
 
-                -- register (stateless, but allow trigger via boolean if needed)
-                local key = button.settings.name or "button"
-                window:_registerControl(key, {
-                    get = function() return true end,
-                    set = function(_) -- buttons have no persistent value
-                    end
-                })
-
                 return button
             end
 
@@ -2289,17 +2299,33 @@ function redwine.new(redwineSettings)
                     end
                 )
 
-                -- register
-                window:_registerControl(toggle.settings.name or "checkbox_toggle", {
-                    get = function() return toggle.value end,
-                    set = function(v)
-                        local nv = not not v
-                        if nv ~= toggle.value then
-                            toggle.value = nv
-                            helpers.tweenObject(toggle.button, {ImageTransparency = nv and 0 or 1}, 0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                            if toggle.settings.callback then toggle.settings.callback(toggle.value) end
-                        end
+                -- expose get/set for config system and register
+                function toggle:get()
+                    return self.value
+                end
+                function toggle:set(v)
+                    self.value = not not v
+                    if self.value then
+                        helpers.tweenObject(
+                            self.button,
+                            {ImageTransparency = 0},
+                            0.1,
+                            Enum.EasingStyle.Quad,
+                            Enum.EasingDirection.Out
+                        )
+                    else
+                        helpers.tweenObject(
+                            self.button,
+                            {ImageTransparency = 1},
+                            0.1,
+                            Enum.EasingStyle.Quad,
+                            Enum.EasingDirection.Out
+                        )
                     end
+                end
+                window:_registerComponent("toggle", toggle.settings.name or "checkbox_toggle", {
+                    get = function() return toggle:get() end,
+                    set = function(v) toggle:set(v) end,
                 })
 
                 return toggle
@@ -2468,16 +2494,17 @@ function redwine.new(redwineSettings)
                         end
                     )
                 end
-                -- register
-                window:_registerControl(textbox.settings.name or "input_textbox", {
-                    get = function() return textbox.textbox.Text end,
-                    set = function(v)
-                        if type(v) ~= "string" then v = tostring(v) end
-                        textbox.textbox.Text = v
-                        if textbox.settings.callback then textbox.settings.callback(v) end
-                    end
-                })
 
+                function textbox:get()
+                    return self.textbox.Text
+                end
+                function textbox:set(v)
+                    self.textbox.Text = tostring(v or "")
+                end
+                window:_registerComponent("textbox", textbox.settings.name or "input_textbox", {
+                    get = function() return textbox:get() end,
+                    set = function(v) textbox:set(v) end,
+                })
                 return textbox
             end
 
@@ -2679,14 +2706,15 @@ function redwine.new(redwineSettings)
                     )
                 end
 
-                -- register
-                window:_registerControl(textbox.settings.name or "subtext_textbox", {
-                    get = function() return textbox.textbox.Text end,
-                    set = function(v)
-                        if type(v) ~= "string" then v = tostring(v) end
-                        textbox.textbox.Text = v
-                        if textbox.settings.callback then textbox.settings.callback(v) end
-                    end
+                function textbox:get()
+                    return self.textbox.Text
+                end
+                function textbox:set(v)
+                    self.textbox.Text = tostring(v or "")
+                end
+                window:_registerComponent("textbox", textbox.settings.name or "subtext_textbox", {
+                    get = function() return textbox:get() end,
+                    set = function(v) textbox:set(v) end,
                 })
 
                 return textbox
@@ -2888,14 +2916,15 @@ function redwine.new(redwineSettings)
                     end
                 )
 
-                -- register
-                window:_registerControl(textbox.settings.name or "inline_textbox", {
-                    get = function() return textbox.textbox.Text end,
-                    set = function(v)
-                        if type(v) ~= "string" then v = tostring(v) end
-                        textbox.textbox.Text = v
-                        if textbox.settings.callback then textbox.settings.callback(v) end
-                    end
+                function textbox:get()
+                    return self.textbox.Text
+                end
+                function textbox:set(v)
+                    self.textbox.Text = tostring(v or "")
+                end
+                window:_registerComponent("textbox", textbox.settings.name or "inline_textbox", {
+                    get = function() return textbox:get() end,
+                    set = function(v) textbox:set(v) end,
                 })
 
                 return textbox
@@ -3134,12 +3163,14 @@ function redwine.new(redwineSettings)
                     end
                 end
 
-                -- register
-                window:_registerControl(keybind.settings.name or "keybind", {
-                    get = function() return keybind:get() end,
+                window:_registerComponent("keybind", keybind.settings.name or "keybind", {
+                    get = function()
+                        local kc = keybind:get()
+                        return kc
+                    end,
                     set = function(v)
                         keybind:set(v)
-                    end
+                    end,
                 })
 
                 return keybind
@@ -3482,7 +3513,7 @@ function redwine.new(redwineSettings)
                     end
                 )
 
-                --[[ robust close when clicking outside items/button
+                -- robust close when clicking outside items/button
                 do
                     local UIS = game:GetService("UserInputService")
                     local function pointInFrame(fr, x, y)
@@ -3510,7 +3541,7 @@ function redwine.new(redwineSettings)
                         end
                     )
                 end
-                ]]
+
                 -- API
                 function dd:get()
                     return table.clone(self.selected)
@@ -3540,15 +3571,20 @@ function redwine.new(redwineSettings)
                 -- initialize
                 dd.button.Text = formatButtonText()
 
-                -- register
-                window:_registerControl(dd.settings.name or "dropdown", {
+                window:_registerComponent("dropdown", dd.settings.name or "dropdown", {
                     get = function()
-                        return table.clone(dd.selected)
+                        if dd.settings.multi then return dd:get() end
+                        local t = dd:get()
+                        return t[1]
                     end,
-                    set = function(values)
-                        if type(values) ~= "table" then values = {values} end
-                        dd:set(values)
-                    end
+                    set = function(v)
+                        if dd.settings.multi then
+                            if type(v) ~= "table" then v = {v} end
+                            dd:set(v)
+                        else
+                            dd:set(v)
+                        end
+                    end,
                 })
 
                 return dd
@@ -4092,17 +4128,9 @@ function redwine.new(redwineSettings)
                 -- init visuals
                 task.defer(updateVisuals)
 
-                -- register
-                window:_registerControl(cp.settings.name or "colorpicker", {
+                window:_registerComponent("colorpicker", cp.settings.name or "colorpicker", {
                     get = function() return cp:get() end,
-                    set = function(v)
-                        local c = v
-                        if typeof(v) ~= "Color3" and type(v) == "string" then
-                            local r,g,b = v:match("#?(%x%x)(%x%x)(%x%x)")
-                            if r then c = Color3.fromRGB(tonumber(r,16), tonumber(g,16), tonumber(b,16)) end
-                        end
-                        if typeof(c) == "Color3" then cp:set(c) end
-                    end
+                    set = function(v) cp:set(v) end,
                 })
 
                 return cp
@@ -4328,10 +4356,9 @@ function redwine.new(redwineSettings)
                 -- init visuals
                 task.defer(function() updateVisuals(value) end)
 
-                -- register
-                window:_registerControl(s.settings.name or "slider", {
+                window:_registerComponent("slider", s.settings.name or "slider", {
                     get = function() return s:get() end,
-                    set = function(v) s:set(v) end
+                    set = function(v) s:set(v) end,
                 })
 
                 return s
@@ -4343,6 +4370,8 @@ function redwine.new(redwineSettings)
         return tab
     end
 
+    -- initialize config system (folder + deferred autoload)
+    window:_initConfigSystem()
     return window
 end
 
