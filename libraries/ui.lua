@@ -3513,7 +3513,7 @@ function redwine.new(redwineSettings)
                     end
                 )
 
-                -- robust close when clicking outside items/button
+                --[[ robust close when clicking outside items/button
                 do
                     local UIS = game:GetService("UserInputService")
                     local function pointInFrame(fr, x, y)
@@ -3541,7 +3541,7 @@ function redwine.new(redwineSettings)
                         end
                     )
                 end
-
+                --]]
                 -- API
                 function dd:get()
                     return table.clone(self.selected)
