@@ -1311,55 +1311,51 @@ function redwine.new(redwineSettings)
         -- hover feedback for tab button (only when not selected)
         tab.button.MouseEnter:Connect(
             function()
-                if not tab.visible then
-                    if tab._tabsEntry then tab._tabsEntry._hover = true end
-                    helpers.tweenObject(
-                        tab.button,
-                        {TextColor3 = window.theme.tab_button.hover.textColor},
-                        0.15,
-                        Enum.EasingStyle.Quad,
-                        Enum.EasingDirection.Out
-                    )
-                    helpers.tweenObject(
-                        tab.padding,
-                        {
-                            PaddingBottom = window.theme.tab_button.hover.padding.bottom
-                        },
-                        0.15,
-                        Enum.EasingStyle.Quad,
-                        Enum.EasingDirection.Out
-                    )
-                    if tab.buttonGradient then
-                        tab.buttonGradient.Color = window.theme.tab_button.hover.gradient.ColorSequence
-                        tab.buttonGradient.Rotation = window.theme.tab_button.hover.gradient.Rotation
-                    end
+                if tab._tabsEntry then tab._tabsEntry._hover = true end
+                helpers.tweenObject(
+                    tab.button,
+                    {TextColor3 = window.theme.tab_button.hover.textColor},
+                    0.15,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.Out
+                )
+                helpers.tweenObject(
+                    tab.padding,
+                    {
+                        PaddingBottom = window.theme.tab_button.hover.padding.bottom
+                    },
+                    0.15,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.Out
+                )
+                if tab.buttonGradient then
+                    tab.buttonGradient.Color = window.theme.tab_button.hover.gradient.ColorSequence
+                    tab.buttonGradient.Rotation = window.theme.tab_button.hover.gradient.Rotation
                 end
             end
         )
         tab.button.MouseLeave:Connect(
             function()
-                if not tab.visible then
-                    if tab._tabsEntry then tab._tabsEntry._hover = false end
-                    helpers.tweenObject(
-                        tab.button,
-                        {TextColor3 = window.theme.tab_button.off.textColor},
-                        0.15,
-                        Enum.EasingStyle.Quad,
-                        Enum.EasingDirection.Out
-                    )
-                    helpers.tweenObject(
-                        tab.padding,
-                        {
-                            PaddingBottom = window.theme.tab_button.off.padding.bottom
-                        },
-                        0.15,
-                        Enum.EasingStyle.Quad,
-                        Enum.EasingDirection.Out
-                    )
-                    if tab.buttonGradient then
-                        tab.buttonGradient.Color = window.theme.tab_button.off.gradient.ColorSequence
-                        tab.buttonGradient.Rotation = window.theme.tab_button.off.gradient.Rotation
-                    end
+                if tab._tabsEntry then tab._tabsEntry._hover = false end
+                helpers.tweenObject(
+                    tab.button,
+                    {TextColor3 = window.theme.tab_button.off.textColor},
+                    0.15,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.Out
+                )
+                helpers.tweenObject(
+                    tab.padding,
+                    {
+                        PaddingBottom = window.theme.tab_button.off.padding.bottom
+                    },
+                    0.15,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.Out
+                )
+                if tab.buttonGradient then
+                    tab.buttonGradient.Color = window.theme.tab_button.off.gradient.ColorSequence
+                    tab.buttonGradient.Rotation = window.theme.tab_button.off.gradient.Rotation
                 end
             end
         )
