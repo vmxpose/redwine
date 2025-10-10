@@ -1,3 +1,4 @@
+-- redwine UI library by vmxpose
 local helpers = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/helpers.lua"))()
 local styles = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/styles.lua"))()
 
@@ -1164,13 +1165,13 @@ function redwine.new(redwineSettings)
                     }
                 )
 
-                helpers.appendUICorner(button.textbutton, window.theme.button.singlewide.cornerRadius)
+                helpers.appendUICorner(button.textbutton, window.theme.button.subtext.cornerRadius)
                 helpers.appendUIStroke(
                     button.textbutton,
-                    window.theme.button.singlewide.stroke.color,
-                    window.theme.button.singlewide.stroke.thickness,
-                    window.theme.button.singlewide.stroke.strokeMode,
-                    window.theme.button.singlewide.stroke.lineJoinMode
+                    window.theme.button.subtext.stroke.color,
+                    window.theme.button.subtext.stroke.thickness,
+                    window.theme.button.subtext.stroke.strokeMode,
+                    window.theme.button.subtext.stroke.lineJoinMode
                 )
                 button.textbutton.MouseButton1Click:Connect(
                     function()
@@ -3373,4 +3374,4 @@ function redwine.new(redwineSettings)
     return window
 end
 
-return redwine;
+return redwine
