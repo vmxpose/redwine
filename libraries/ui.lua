@@ -294,6 +294,11 @@ function redwine.new(redwineSettings)
     -- Apply the current theme to core window parts and tabs
     function window:_applyTheme()
         local theme = window.theme or redwine.styles.default
+        -- small helper for concise tweens
+        local function tween(obj, props, dur, style, dir)
+            if not obj or not props then return end
+            helpers.tweenObject(obj, props, dur or 0.2, style or Enum.EasingStyle.Quad, dir or Enum.EasingDirection.Out)
+        end
 
         -- main frame
         if window.main_frame then
@@ -350,8 +355,10 @@ function redwine.new(redwineSettings)
             if not cardFrame or cardFrame.ClassName ~= "Frame" then return end
             local theme = window.theme
             -- card frame background, gradient, stroke
-            cardFrame.BackgroundColor3 = theme.card.background
-            cardFrame.BackgroundTransparency = theme.card.backgroundtransparency
+            tween(cardFrame, {
+                BackgroundColor3 = theme.card.background,
+                BackgroundTransparency = theme.card.backgroundtransparency,
+            })
             setUIGradient(cardFrame, theme.card.gradient.ColorSequence, theme.card.gradient.Rotation)
             setUIStroke(cardFrame, theme.card.stroke.color, theme.card.stroke.thickness, theme.card.stroke.strokeMode, theme.card.stroke.lineJoinMode)
 
@@ -359,12 +366,14 @@ function redwine.new(redwineSettings)
             local title = cardFrame:FindFirstChild("card_title")
             if title and title.ClassName == "TextLabel" then
                 title.AnchorPoint = theme.cardtitle.anchorPoint
-                title.Size = theme.cardtitle.size
-                title.Position = theme.cardtitle.position
                 title.Font = theme.cardtitle.textFont
-                title.TextColor3 = theme.cardtitle.textColor
-                title.TextSize = theme.cardtitle.textSize
                 title.TextXAlignment = theme.cardtitle.textalignment
+                tween(title, {
+                    Size = theme.cardtitle.size,
+                    Position = theme.cardtitle.position,
+                    TextColor3 = theme.cardtitle.textColor,
+                    TextSize = theme.cardtitle.textSize,
+                })
                 setUIGradient(title, theme.cardtitle.gradient.ColorSequence, theme.cardtitle.gradient.Rotation)
                 setUIPadding(title, theme.cardtitle.padding)
             end
@@ -372,7 +381,7 @@ function redwine.new(redwineSettings)
             -- content frame
             local content = cardFrame:FindFirstChild("card_content")
             if content and content.ClassName == "Frame" then
-                content.Size = theme.cardcontent.size
+                tween(content, { Size = theme.cardcontent.size })
                 content.AnchorPoint = theme.cardcontent.anchorPoint
                 content.AutomaticSize = theme.cardcontent.automaticSize
                 setUIListLayout(content, {
@@ -388,31 +397,35 @@ function redwine.new(redwineSettings)
                 local function updateRichTextLabel(lbl)
                     if not lbl or lbl.ClassName ~= "TextLabel" then return end
                     lbl.Font = theme.richTextLabel.textFont
-                    lbl.TextColor3 = theme.richTextLabel.textColor
-                    lbl.TextSize = theme.richTextLabel.textSize
                     lbl.TextXAlignment = theme.richTextLabel.textalignment
                     lbl.RichText = theme.richTextLabel.richText
                     lbl.AutomaticSize = theme.richTextLabel.automaticSize
-                    lbl.Size = theme.richTextLabel.size
                     lbl.AnchorPoint = theme.richTextLabel.anchorPoint
+                    tween(lbl, {
+                        TextColor3 = theme.richTextLabel.textColor,
+                        TextSize = theme.richTextLabel.textSize,
+                        Size = theme.richTextLabel.size,
+                    })
                     setUIPadding(lbl, theme.richTextLabel.padding)
                 end
 
                 local function updateSingleButton(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    container.Size = theme.button.singlewide.frame.size
+                    tween(container, { Size = theme.button.singlewide.frame.size })
                     container.AnchorPoint = theme.button.singlewide.frame.anchorPoint
                     local tb = container:FindFirstChildOfClass("TextButton")
                     if tb then
-                        tb.BackgroundColor3 = theme.button.singlewide.background
-                        tb.BackgroundTransparency = theme.button.singlewide.backgroundTransparency
+                        tween(tb, {
+                            BackgroundColor3 = theme.button.singlewide.background,
+                            BackgroundTransparency = theme.button.singlewide.backgroundTransparency,
+                            Position = theme.button.singlewide.position,
+                            Size = theme.button.singlewide.size,
+                            TextColor3 = theme.button.singlewide.textColor,
+                            TextSize = theme.button.singlewide.textSize,
+                        })
                         tb.AnchorPoint = theme.button.singlewide.anchorPoint
-                        tb.Position = theme.button.singlewide.position
                         tb.AutomaticSize = theme.button.singlewide.automaticSize
-                        tb.Size = theme.button.singlewide.size
                         tb.Font = theme.button.singlewide.textFont
-                        tb.TextColor3 = theme.button.singlewide.textColor
-                        tb.TextSize = theme.button.singlewide.textSize
                         tb.TextXAlignment = theme.button.singlewide.textAlignment
                         setUICorner(tb, theme.button.singlewide.cornerRadius)
                         setUIStroke(tb, theme.button.singlewide.stroke.color, theme.button.singlewide.stroke.thickness, theme.button.singlewide.stroke.strokeMode, theme.button.singlewide.stroke.lineJoinMode)
@@ -421,31 +434,35 @@ function redwine.new(redwineSettings)
 
                 local function updateSubtextButton(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    container.Size = theme.button.subtext.frame.size
+                    tween(container, { Size = theme.button.subtext.frame.size })
                     container.AnchorPoint = theme.button.subtext.frame.anchorPoint
                     local lbl = container:FindFirstChild("subtext_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = theme.button.subtext.richTextLabel.textFont
-                        lbl.TextColor3 = theme.button.subtext.richTextLabel.textColor
-                        lbl.TextSize = theme.button.subtext.richTextLabel.textSize
                         lbl.TextXAlignment = theme.button.subtext.richTextLabel.textalignment
                         lbl.RichText = theme.button.subtext.richTextLabel.richText
-                        lbl.Size = theme.button.subtext.richTextLabel.size
-                        lbl.Position = theme.button.subtext.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = theme.button.subtext.richTextLabel.textColor,
+                            TextSize = theme.button.subtext.richTextLabel.textSize,
+                            Size = theme.button.subtext.richTextLabel.size,
+                            Position = theme.button.subtext.richTextLabel.position,
+                        })
                         lbl.AnchorPoint = theme.button.subtext.richTextLabel.anchorPoint
                         setUIPadding(lbl, theme.button.subtext.richTextLabel.padding)
                     end
                     local tb = container:FindFirstChildOfClass("TextButton")
                     if tb then
-                        tb.BackgroundColor3 = theme.button.subtext.background
-                        tb.BackgroundTransparency = theme.button.subtext.backgroundTransparency
+                        tween(tb, {
+                            BackgroundColor3 = theme.button.subtext.background,
+                            BackgroundTransparency = theme.button.subtext.backgroundTransparency,
+                            Position = theme.button.subtext.position,
+                            Size = theme.button.subtext.size,
+                            TextColor3 = theme.button.subtext.textColor,
+                            TextSize = theme.button.subtext.textSize,
+                        })
                         tb.AnchorPoint = theme.button.subtext.anchorPoint
-                        tb.Position = theme.button.subtext.position
                         tb.AutomaticSize = theme.button.subtext.automaticSize
-                        tb.Size = theme.button.subtext.size
                         tb.Font = theme.button.subtext.textFont
-                        tb.TextColor3 = theme.button.subtext.textColor
-                        tb.TextSize = theme.button.subtext.textSize
                         tb.TextXAlignment = theme.button.subtext.textAlignment
                         setUICorner(tb, theme.button.subtext.cornerRadius)
                         setUIStroke(tb, theme.button.subtext.stroke.color, theme.button.subtext.stroke.thickness, theme.button.subtext.stroke.strokeMode, theme.button.subtext.stroke.lineJoinMode)
@@ -454,29 +471,35 @@ function redwine.new(redwineSettings)
 
                 local function updateToggle(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    container.Size = theme.toggle.frame.size
+                    tween(container, {
+                        Size = theme.toggle.frame.size,
+                        BackgroundColor3 = theme.toggle.frame.background,
+                        BackgroundTransparency = theme.toggle.frame.backgroundTransparency,
+                    })
                     container.AnchorPoint = theme.toggle.frame.anchorPoint
-                    container.BackgroundColor3 = theme.toggle.frame.background
-                    container.BackgroundTransparency = theme.toggle.frame.backgroundTransparency
                     local lbl = container:FindFirstChild("checkbox_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = theme.toggle.richTextLabel.textFont
-                        lbl.TextColor3 = theme.toggle.richTextLabel.textColor
-                        lbl.TextSize = theme.toggle.richTextLabel.textSize
                         lbl.TextXAlignment = theme.toggle.richTextLabel.textalignment
                         lbl.AutomaticSize = theme.toggle.richTextLabel.automaticSize
-                        lbl.Size = theme.toggle.richTextLabel.size
                         lbl.AnchorPoint = theme.toggle.richTextLabel.anchorPoint
-                        lbl.Position = theme.toggle.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = theme.toggle.richTextLabel.textColor,
+                            TextSize = theme.toggle.richTextLabel.textSize,
+                            Size = theme.toggle.richTextLabel.size,
+                            Position = theme.toggle.richTextLabel.position,
+                        })
                         setUIPadding(lbl, theme.toggle.richTextLabel.padding)
                     end
                     local ib = container:FindFirstChildOfClass("ImageButton")
                     if ib then
-                        ib.BackgroundColor3 = theme.toggle.button.background
-                        ib.BackgroundTransparency = theme.toggle.button.backgroundTransparency
+                        tween(ib, {
+                            BackgroundColor3 = theme.toggle.button.background,
+                            BackgroundTransparency = theme.toggle.button.backgroundTransparency,
+                            Size = theme.toggle.button.size,
+                            Position = theme.toggle.button.position,
+                        })
                         ib.AnchorPoint = theme.toggle.button.anchorPoint
-                        ib.Size = theme.toggle.button.size
-                        ib.Position = theme.toggle.button.position
                         ib.Image = theme.toggle.button.image
                         setUICorner(ib, theme.toggle.button.cornerRadius)
                         setUIStroke(ib, theme.toggle.button.stroke.color, theme.toggle.button.stroke.thickness, theme.toggle.button.stroke.strokeMode, theme.toggle.button.stroke.lineJoinMode)
@@ -485,27 +508,31 @@ function redwine.new(redwineSettings)
 
                 local function updateTextboxSingle(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    container.Size = theme.textbox.singlewide.frame.size
+                    tween(container, { Size = theme.textbox.singlewide.frame.size })
                     container.AnchorPoint = theme.textbox.singlewide.frame.anchorPoint
                     local tb = container:FindFirstChildOfClass("TextBox")
                     if tb then
-                        tb.BackgroundColor3 = theme.textbox.singlewide.background
-                        tb.BackgroundTransparency = theme.textbox.singlewide.backgroundTransparency
+                        tween(tb, {
+                            BackgroundColor3 = theme.textbox.singlewide.background,
+                            BackgroundTransparency = theme.textbox.singlewide.backgroundTransparency,
+                            Position = theme.textbox.singlewide.position,
+                            Size = theme.textbox.singlewide.size,
+                            TextColor3 = theme.textbox.singlewide.textColor,
+                            TextSize = theme.textbox.singlewide.textSize,
+                        })
                         tb.AnchorPoint = theme.textbox.singlewide.anchorPoint
-                        tb.Position = theme.textbox.singlewide.position
                         tb.AutomaticSize = theme.textbox.singlewide.automaticSize
-                        tb.Size = theme.textbox.singlewide.size
                         tb.Font = theme.textbox.singlewide.textFont
-                        tb.TextColor3 = theme.textbox.singlewide.textColor
-                        tb.TextSize = theme.textbox.singlewide.textSize
                         tb.TextXAlignment = theme.textbox.singlewide.textAlignment
                         tb.PlaceholderColor3 = theme.textbox.subtext.placeholderColor -- reuse consistent placeholder
                         setUICorner(tb, theme.textbox.singlewide.cornerRadius)
                         setUIStroke(tb, theme.textbox.singlewide.stroke.color, theme.textbox.singlewide.stroke.thickness, theme.textbox.singlewide.stroke.strokeMode, theme.textbox.singlewide.stroke.lineJoinMode)
                         local ind = tb:FindFirstChild("indicator")
                         if ind and ind.ClassName == "Frame" then
-                            ind.Position = theme.textbox.singlewide.indicator.position
-                            ind.BackgroundColor3 = theme.textbox.singlewide.indicator.background
+                            tween(ind, {
+                                Position = theme.textbox.singlewide.indicator.position,
+                                BackgroundColor3 = theme.textbox.singlewide.indicator.background,
+                            })
                             setUIGradient(ind, theme.textbox.singlewide.indicator.gradient.ColorSequence, theme.textbox.singlewide.indicator.gradient.Rotation)
                         end
                     end
@@ -513,39 +540,45 @@ function redwine.new(redwineSettings)
 
                 local function updateTextboxSubtext(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    container.Size = theme.textbox.subtext.frame.size
+                    tween(container, { Size = theme.textbox.subtext.frame.size })
                     container.AnchorPoint = theme.textbox.subtext.frame.anchorPoint
                     local lbl = container:FindFirstChild("subtext_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = theme.textbox.subtext.richTextLabel.textFont
-                        lbl.TextColor3 = theme.textbox.subtext.richTextLabel.textColor
-                        lbl.TextSize = theme.textbox.subtext.richTextLabel.textSize
                         lbl.TextXAlignment = theme.textbox.subtext.richTextLabel.textalignment
                         lbl.RichText = theme.textbox.subtext.richTextLabel.richText
-                        lbl.Size = theme.textbox.subtext.richTextLabel.size
-                        lbl.Position = theme.textbox.subtext.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = theme.textbox.subtext.richTextLabel.textColor,
+                            TextSize = theme.textbox.subtext.richTextLabel.textSize,
+                            Size = theme.textbox.subtext.richTextLabel.size,
+                            Position = theme.textbox.subtext.richTextLabel.position,
+                        })
                         lbl.AnchorPoint = theme.textbox.subtext.richTextLabel.anchorPoint
                         setUIPadding(lbl, theme.textbox.subtext.richTextLabel.padding)
                     end
                     local tb = container:FindFirstChildOfClass("TextBox")
                     if tb then
-                        tb.BackgroundColor3 = theme.textbox.subtext.background
-                        tb.BackgroundTransparency = theme.textbox.subtext.backgroundTransparency
+                        tween(tb, {
+                            BackgroundColor3 = theme.textbox.subtext.background,
+                            BackgroundTransparency = theme.textbox.subtext.backgroundTransparency,
+                            Position = theme.textbox.subtext.position,
+                            Size = theme.textbox.subtext.size,
+                            TextColor3 = theme.textbox.subtext.textColor,
+                            TextSize = theme.textbox.subtext.textSize,
+                        })
                         tb.AnchorPoint = theme.textbox.subtext.anchorPoint
-                        tb.Position = theme.textbox.subtext.position
                         tb.AutomaticSize = theme.textbox.subtext.automaticSize
-                        tb.Size = theme.textbox.subtext.size
                         tb.Font = theme.textbox.subtext.textFont
-                        tb.TextColor3 = theme.textbox.subtext.textColor
-                        tb.TextSize = theme.textbox.subtext.textSize
                         tb.TextXAlignment = theme.textbox.subtext.textAlignment
                         tb.PlaceholderColor3 = theme.textbox.subtext.placeholderColor
                         setUICorner(tb, theme.textbox.subtext.cornerRadius)
                         setUIStroke(tb, theme.textbox.subtext.stroke.color, theme.textbox.subtext.stroke.thickness, theme.textbox.subtext.stroke.strokeMode, theme.textbox.subtext.stroke.lineJoinMode)
                         local ind = tb:FindFirstChild("indicator")
                         if ind and ind.ClassName == "Frame" then
-                            ind.Position = theme.textbox.singlewide.indicator.position
-                            ind.BackgroundColor3 = theme.textbox.singlewide.indicator.background
+                            tween(ind, {
+                                Position = theme.textbox.singlewide.indicator.position,
+                                BackgroundColor3 = theme.textbox.singlewide.indicator.background,
+                            })
                             setUIGradient(ind, theme.textbox.singlewide.indicator.gradient.ColorSequence, theme.textbox.singlewide.indicator.gradient.Rotation)
                         end
                     end
@@ -553,31 +586,35 @@ function redwine.new(redwineSettings)
 
                 local function updateTextboxInline(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    container.Size = theme.textbox.inline.frame.size
+                    tween(container, { Size = theme.textbox.inline.frame.size })
                     container.AnchorPoint = theme.textbox.inline.frame.anchorPoint
                     local lbl = container:FindFirstChild("inline_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = theme.textbox.inline.richTextLabel.textFont
-                        lbl.TextColor3 = theme.textbox.inline.richTextLabel.textColor
-                        lbl.TextSize = theme.textbox.inline.richTextLabel.textSize
                         lbl.TextXAlignment = theme.textbox.inline.richTextLabel.textalignment
                         lbl.RichText = theme.textbox.inline.richTextLabel.richText
                         lbl.AutomaticSize = theme.textbox.inline.richTextLabel.automaticSize
-                        lbl.Size = theme.textbox.inline.richTextLabel.size
-                        lbl.Position = theme.textbox.inline.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = theme.textbox.inline.richTextLabel.textColor,
+                            TextSize = theme.textbox.inline.richTextLabel.textSize,
+                            Size = theme.textbox.inline.richTextLabel.size,
+                            Position = theme.textbox.inline.richTextLabel.position,
+                        })
                         lbl.AnchorPoint = theme.textbox.inline.richTextLabel.anchorPoint
                         setUIPadding(lbl, theme.textbox.inline.richTextLabel.padding)
                     end
                     local tb = container:FindFirstChildOfClass("TextBox")
                     if tb then
-                        tb.BackgroundColor3 = theme.textbox.inline.background
-                        tb.BackgroundTransparency = theme.textbox.inline.backgroundTransparency
+                        tween(tb, {
+                            BackgroundColor3 = theme.textbox.inline.background,
+                            BackgroundTransparency = theme.textbox.inline.backgroundTransparency,
+                            Position = theme.textbox.inline.position,
+                            Size = theme.textbox.inline.size,
+                            TextColor3 = theme.textbox.inline.textColor,
+                            TextSize = theme.textbox.inline.textSize,
+                        })
                         tb.AnchorPoint = theme.textbox.inline.anchorPoint
-                        tb.Position = theme.textbox.inline.position
-                        tb.Size = theme.textbox.inline.size
                         tb.Font = theme.textbox.inline.textFont
-                        tb.TextColor3 = theme.textbox.inline.textColor
-                        tb.TextSize = theme.textbox.inline.textSize
                         tb.TextXAlignment = theme.textbox.inline.textAlignment
                         setUICorner(tb, theme.textbox.inline.cornerRadius)
                         setUIStroke(tb, theme.textbox.inline.stroke.color, theme.textbox.inline.stroke.thickness, theme.textbox.inline.stroke.strokeMode, theme.textbox.inline.stroke.lineJoinMode)
@@ -587,31 +624,35 @@ function redwine.new(redwineSettings)
                 local function updateKeybind(container)
                     if not container or container.ClassName ~= "Frame" then return end
                     -- mirrors subtext button style
-                    container.Size = theme.button.subtext.frame.size
+                    tween(container, { Size = theme.button.subtext.frame.size })
                     container.AnchorPoint = theme.button.subtext.frame.anchorPoint
                     local lbl = container:FindFirstChild("keybind_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = theme.button.subtext.richTextLabel.textFont
-                        lbl.TextColor3 = theme.button.subtext.richTextLabel.textColor
-                        lbl.TextSize = theme.button.subtext.richTextLabel.textSize
                         lbl.TextXAlignment = theme.button.subtext.richTextLabel.textalignment
                         lbl.RichText = theme.button.subtext.richTextLabel.richText
-                        lbl.Size = theme.button.subtext.richTextLabel.size
-                        lbl.Position = theme.button.subtext.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = theme.button.subtext.richTextLabel.textColor,
+                            TextSize = theme.button.subtext.richTextLabel.textSize,
+                            Size = theme.button.subtext.richTextLabel.size,
+                            Position = theme.button.subtext.richTextLabel.position,
+                        })
                         lbl.AnchorPoint = theme.button.subtext.richTextLabel.anchorPoint
                         setUIPadding(lbl, theme.button.subtext.richTextLabel.padding)
                     end
                     local tb = container:FindFirstChildOfClass("TextButton")
                     if tb then
-                        tb.BackgroundColor3 = theme.button.subtext.background
-                        tb.BackgroundTransparency = theme.button.subtext.backgroundTransparency
+                        tween(tb, {
+                            BackgroundColor3 = theme.button.subtext.background,
+                            BackgroundTransparency = theme.button.subtext.backgroundTransparency,
+                            Position = theme.button.subtext.position,
+                            Size = theme.button.subtext.size,
+                            TextColor3 = theme.button.subtext.textColor,
+                            TextSize = theme.button.subtext.textSize,
+                        })
                         tb.AnchorPoint = theme.button.subtext.anchorPoint
-                        tb.Position = theme.button.subtext.position
                         tb.AutomaticSize = theme.button.subtext.automaticSize
-                        tb.Size = theme.button.subtext.size
                         tb.Font = theme.button.subtext.textFont
-                        tb.TextColor3 = theme.button.subtext.textColor
-                        tb.TextSize = theme.button.subtext.textSize
                         tb.TextXAlignment = theme.button.subtext.textAlignment
                         setUICorner(tb, theme.button.subtext.cornerRadius)
                         setUIStroke(tb, theme.button.subtext.stroke.color, theme.button.subtext.stroke.thickness, theme.button.subtext.stroke.strokeMode, theme.button.subtext.stroke.lineJoinMode)
@@ -624,31 +665,35 @@ function redwine.new(redwineSettings)
                     local var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
                     local dtheme = theme.dropdown[var]
                     if not dtheme then return end
-                    container.Size = dtheme.frame.size
+                    tween(container, { Size = dtheme.frame.size })
                     container.AnchorPoint = dtheme.frame.anchorPoint
                     local lbl = container:FindFirstChild("dropdown_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = dtheme.richTextLabel.textFont
-                        lbl.TextColor3 = dtheme.richTextLabel.textColor
-                        lbl.TextSize = dtheme.richTextLabel.textSize
                         lbl.TextXAlignment = dtheme.richTextLabel.textalignment
                         lbl.RichText = dtheme.richTextLabel.richText
                         lbl.AutomaticSize = dtheme.richTextLabel.automaticSize
-                        lbl.Size = dtheme.richTextLabel.size
-                        lbl.Position = dtheme.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = dtheme.richTextLabel.textColor,
+                            TextSize = dtheme.richTextLabel.textSize,
+                            Size = dtheme.richTextLabel.size,
+                            Position = dtheme.richTextLabel.position,
+                        })
                         lbl.AnchorPoint = dtheme.richTextLabel.anchorPoint
                         setUIPadding(lbl, dtheme.richTextLabel.padding)
                     end
                     local btn = container:FindFirstChildOfClass("TextButton")
                     if btn then
-                        btn.BackgroundColor3 = dtheme.button.background
-                        btn.BackgroundTransparency = dtheme.button.backgroundTransparency
+                        tween(btn, {
+                            BackgroundColor3 = dtheme.button.background,
+                            BackgroundTransparency = dtheme.button.backgroundTransparency,
+                            Position = dtheme.button.position,
+                            Size = dtheme.button.size,
+                            TextColor3 = dtheme.button.textColor,
+                            TextSize = dtheme.button.textSize,
+                        })
                         btn.AnchorPoint = dtheme.button.anchorPoint
-                        btn.Position = dtheme.button.position
-                        btn.Size = dtheme.button.size
                         btn.Font = dtheme.button.textFont
-                        btn.TextColor3 = dtheme.button.textColor
-                        btn.TextSize = dtheme.button.textSize
                         btn.TextXAlignment = dtheme.button.textAlignment
                         setUICorner(btn, dtheme.button.cornerRadius)
                         setUIStroke(btn, dtheme.button.stroke.color, dtheme.button.stroke.thickness, dtheme.button.stroke.strokeMode, dtheme.button.stroke.lineJoinMode)
@@ -658,11 +703,13 @@ function redwine.new(redwineSettings)
                     end
                     local items = container:FindFirstChild("items")
                     if items and items.ClassName == "ScrollingFrame" then
-                        items.BackgroundColor3 = dtheme.items.background
-                        items.BackgroundTransparency = dtheme.items.backgroundTransparency
+                        tween(items, {
+                            BackgroundColor3 = dtheme.items.background,
+                            BackgroundTransparency = dtheme.items.backgroundTransparency,
+                            Position = dtheme.items.position,
+                            Size = dtheme.items.size,
+                        })
                         items.AnchorPoint = dtheme.items.anchorPoint
-                        items.Position = dtheme.items.position
-                        items.Size = dtheme.items.size
                         items.ScrollBarThickness = dtheme.items.scrollBarThickness
                         items.ScrollBarImageColor3 = dtheme.items.scrollBarColor
                         setUICorner(items, dtheme.items.cornerRadius)
@@ -674,12 +721,14 @@ function redwine.new(redwineSettings)
                         })
                         for _, ib in ipairs(items:GetChildren()) do
                             if ib.ClassName == "TextButton" then
-                                ib.BackgroundColor3 = dtheme.items.itemButton.background
-                                ib.BackgroundTransparency = dtheme.items.itemButton.backgroundTransparency
-                                ib.Size = dtheme.items.itemButton.size
+                                tween(ib, {
+                                    BackgroundColor3 = dtheme.items.itemButton.background,
+                                    BackgroundTransparency = dtheme.items.itemButton.backgroundTransparency,
+                                    Size = dtheme.items.itemButton.size,
+                                    TextColor3 = dtheme.items.itemButton.textColor,
+                                    TextSize = dtheme.items.itemButton.textSize,
+                                })
                                 ib.Font = dtheme.items.itemButton.textFont
-                                ib.TextColor3 = dtheme.items.itemButton.textColor
-                                ib.TextSize = dtheme.items.itemButton.textSize
                                 ib.TextXAlignment = dtheme.items.itemButton.textAlignment
                                 setUICorner(ib, dtheme.items.itemButton.cornerRadius)
                                 setUIStroke(ib, dtheme.items.itemButton.stroke.color, dtheme.items.itemButton.stroke.thickness, dtheme.items.itemButton.stroke.strokeMode, dtheme.items.itemButton.stroke.lineJoinMode)
@@ -694,31 +743,35 @@ function redwine.new(redwineSettings)
                     local var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
                     local ctheme = theme.colorpicker[var]
                     if not ctheme then return end
-                    container.Size = ctheme.frame.size
+                    tween(container, { Size = ctheme.frame.size })
                     container.AnchorPoint = ctheme.frame.anchorPoint
                     local lbl = container:FindFirstChild("colorpicker_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = ctheme.richTextLabel.textFont
-                        lbl.TextColor3 = ctheme.richTextLabel.textColor
-                        lbl.TextSize = ctheme.richTextLabel.textSize
                         lbl.TextXAlignment = ctheme.richTextLabel.textalignment
                         lbl.RichText = ctheme.richTextLabel.richText
                         lbl.AutomaticSize = ctheme.richTextLabel.automaticSize
-                        lbl.Size = ctheme.richTextLabel.size
-                        lbl.Position = ctheme.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = ctheme.richTextLabel.textColor,
+                            TextSize = ctheme.richTextLabel.textSize,
+                            Size = ctheme.richTextLabel.size,
+                            Position = ctheme.richTextLabel.position,
+                        })
                         lbl.AnchorPoint = ctheme.richTextLabel.anchorPoint
                         setUIPadding(lbl, ctheme.richTextLabel.padding)
                     end
                     local btn = container:FindFirstChildOfClass("TextButton")
                     if btn then
-                        btn.BackgroundColor3 = ctheme.button.background
-                        btn.BackgroundTransparency = ctheme.button.backgroundTransparency
+                        tween(btn, {
+                            BackgroundColor3 = ctheme.button.background,
+                            BackgroundTransparency = ctheme.button.backgroundTransparency,
+                            Position = ctheme.button.position,
+                            Size = ctheme.button.size,
+                            TextColor3 = ctheme.button.textColor,
+                            TextSize = ctheme.button.textSize,
+                        })
                         btn.AnchorPoint = ctheme.button.anchorPoint
-                        btn.Position = ctheme.button.position
-                        btn.Size = ctheme.button.size
                         btn.Font = ctheme.button.textFont
-                        btn.TextColor3 = ctheme.button.textColor
-                        btn.TextSize = ctheme.button.textSize
                         btn.TextXAlignment = ctheme.button.textAlignment
                         setUICorner(btn, ctheme.button.cornerRadius)
                         setUIStroke(btn, ctheme.button.stroke.color, ctheme.button.stroke.thickness, ctheme.button.stroke.strokeMode, ctheme.button.stroke.lineJoinMode)
@@ -737,35 +790,35 @@ function redwine.new(redwineSettings)
                     end
                     local panel = container:FindFirstChild("panel")
                     if panel and panel.ClassName == "Frame" then
-                        panel.BackgroundColor3 = ctheme.panel.background
-                        panel.BackgroundTransparency = ctheme.panel.backgroundTransparency
+                        tween(panel, {
+                            BackgroundColor3 = ctheme.panel.background,
+                            BackgroundTransparency = ctheme.panel.backgroundTransparency,
+                            Position = ctheme.panel.position,
+                            Size = ctheme.panel.size,
+                        })
                         panel.AnchorPoint = ctheme.panel.anchorPoint
-                        panel.Position = ctheme.panel.position
-                        panel.Size = ctheme.panel.size
                         setUICorner(panel, ctheme.panel.cornerRadius)
                         setUIStroke(panel, ctheme.panel.stroke.color, ctheme.panel.stroke.thickness, ctheme.panel.stroke.strokeMode, ctheme.panel.stroke.lineJoinMode)
                     end
                     local sv = container:FindFirstChild("sv", true)
                     if sv and sv.ClassName == "Frame" then
-                        sv.Size = ctheme.sv.size
-                        sv.Position = ctheme.sv.position
+                        tween(sv, { Size = ctheme.sv.size, Position = ctheme.sv.position })
                         setUICorner(sv, ctheme.sv.cornerRadius)
                         setUIStroke(sv, ctheme.sv.stroke.color, ctheme.sv.stroke.thickness, ctheme.sv.stroke.strokeMode, ctheme.sv.stroke.lineJoinMode)
                     end
                     local hue = container:FindFirstChild("hue", true)
                     if hue and hue.ClassName == "Frame" then
-                        hue.Size = ctheme.hue.size
-                        hue.Position = ctheme.hue.position
+                        tween(hue, { Size = ctheme.hue.size, Position = ctheme.hue.position })
                         setUICorner(hue, ctheme.hue.cornerRadius)
                         setUIStroke(hue, ctheme.hue.stroke.color, ctheme.hue.stroke.thickness, ctheme.hue.stroke.strokeMode, ctheme.hue.stroke.lineJoinMode)
                     end
                     local svMarker = container:FindFirstChild("sv_marker", true)
                     if svMarker and svMarker.ClassName == "Frame" then
-                        svMarker.Size = ctheme.markers.sv.size
+                        tween(svMarker, { Size = ctheme.markers.sv.size })
                     end
                     local hueMarker = container:FindFirstChild("hue_marker", true)
                     if hueMarker and hueMarker.ClassName == "Frame" then
-                        hueMarker.Size = ctheme.markers.hue.size
+                        tween(hueMarker, { Size = ctheme.markers.hue.size })
                     end
                 end
 
@@ -774,56 +827,66 @@ function redwine.new(redwineSettings)
                     local var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
                     local stheme = theme.slider[var]
                     if not stheme then return end
-                    container.Size = stheme.frame.size
+                    tween(container, { Size = stheme.frame.size })
                     container.AnchorPoint = stheme.frame.anchorPoint
                     local lbl = container:FindFirstChild("slider_label")
                     if lbl and lbl.ClassName == "TextLabel" then
                         lbl.Font = stheme.richTextLabel.textFont
-                        lbl.TextColor3 = stheme.richTextLabel.textColor
-                        lbl.TextSize = stheme.richTextLabel.textSize
                         lbl.TextXAlignment = stheme.richTextLabel.textalignment
                         lbl.RichText = stheme.richTextLabel.richText
                         lbl.AutomaticSize = stheme.richTextLabel.automaticSize
-                        lbl.Size = stheme.richTextLabel.size
-                        lbl.Position = stheme.richTextLabel.position
+                        tween(lbl, {
+                            TextColor3 = stheme.richTextLabel.textColor,
+                            TextSize = stheme.richTextLabel.textSize,
+                            Size = stheme.richTextLabel.size,
+                            Position = stheme.richTextLabel.position,
+                        })
                         lbl.AnchorPoint = stheme.richTextLabel.anchorPoint
                         setUIPadding(lbl, stheme.richTextLabel.padding)
                     end
                     local track = container:FindFirstChild("track")
                     if track and track.ClassName == "Frame" then
-                        track.BackgroundColor3 = stheme.track.background
-                        track.BackgroundTransparency = stheme.track.backgroundTransparency
+                        tween(track, {
+                            BackgroundColor3 = stheme.track.background,
+                            BackgroundTransparency = stheme.track.backgroundTransparency,
+                            Position = stheme.track.position,
+                            Size = stheme.track.size,
+                        })
                         track.AnchorPoint = stheme.track.anchorPoint
-                        track.Position = stheme.track.position
-                        track.Size = stheme.track.size
                         setUICorner(track, stheme.track.cornerRadius)
                         setUIStroke(track, stheme.track.stroke.color, stheme.track.stroke.thickness, stheme.track.stroke.strokeMode, stheme.track.stroke.lineJoinMode)
                         local fill = track:FindFirstChild("fill")
                         if fill and fill.ClassName == "Frame" then
-                            fill.BackgroundColor3 = stheme.fill.background
-                            fill.BackgroundTransparency = stheme.fill.backgroundTransparency
+                            tween(fill, {
+                                BackgroundColor3 = stheme.fill.background,
+                                BackgroundTransparency = stheme.fill.backgroundTransparency,
+                            })
                             setUICorner(fill, stheme.fill.cornerRadius)
                             setUIGradient(fill, stheme.fill.gradient.ColorSequence, stheme.fill.gradient.Rotation)
                         end
                         local thumb = track:FindFirstChild("thumb")
                         if thumb and thumb.ClassName == "Frame" then
-                            thumb.BackgroundColor3 = stheme.thumb.background
-                            thumb.BackgroundTransparency = stheme.thumb.backgroundTransparency
-                            thumb.Size = stheme.thumb.size
+                            tween(thumb, {
+                                BackgroundColor3 = stheme.thumb.background,
+                                BackgroundTransparency = stheme.thumb.backgroundTransparency,
+                                Size = stheme.thumb.size,
+                            })
                             setUICorner(thumb, stheme.thumb.cornerRadius)
                             setUIStroke(thumb, stheme.thumb.stroke.color, stheme.thumb.stroke.thickness, stheme.thumb.stroke.strokeMode, stheme.thumb.stroke.lineJoinMode)
                         end
                     end
                     local num = container:FindFirstChild("number")
                     if num and num.ClassName == "TextBox" then
-                        num.BackgroundColor3 = stheme.number.background
-                        num.BackgroundTransparency = stheme.number.backgroundTransparency
+                        tween(num, {
+                            BackgroundColor3 = stheme.number.background,
+                            BackgroundTransparency = stheme.number.backgroundTransparency,
+                            Position = stheme.number.position,
+                            Size = stheme.number.size,
+                            TextColor3 = stheme.number.textColor,
+                            TextSize = stheme.number.textSize,
+                        })
                         num.AnchorPoint = stheme.number.anchorPoint
-                        num.Position = stheme.number.position
-                        num.Size = stheme.number.size
                         num.Font = stheme.number.textFont
-                        num.TextColor3 = stheme.number.textColor
-                        num.TextSize = stheme.number.textSize
                         num.TextXAlignment = stheme.number.textAlignment
                         setUICorner(num, stheme.number.cornerRadius)
                         setUIStroke(num, stheme.number.stroke.color, stheme.number.stroke.thickness, stheme.number.stroke.strokeMode, stheme.number.stroke.lineJoinMode)
@@ -873,32 +936,32 @@ function redwine.new(redwineSettings)
                 t.indicator.BackgroundColor3 = theme.indicator.background
                 setUIGradient(t.indicator, theme.indicator.gradient.ColorSequence, theme.indicator.gradient.Rotation)
                 if t.visible then
-                    t.indicator.Size = theme.indicator.size
+                    tween(t.indicator, { Size = theme.indicator.size })
                 else
-                    t.indicator.Size = UDim2.new(0, 0, 0, 2)
+                    tween(t.indicator, { Size = UDim2.new(0, 0, 0, 2) })
                 end
             end
             -- tab button text + gradient state-aware
             if t.button then
                 t.button.AnchorPoint = theme.tab_button.anchorPoint
-                t.button.Size = theme.tab_button.size
+                tween(t.button, { Size = theme.tab_button.size })
                 t.button.Font = theme.tab_button.textFont
-                t.button.TextSize = theme.tab_button.textSize
+                tween(t.button, { TextSize = theme.tab_button.textSize })
                 t.button.TextXAlignment = theme.tab_button.textXAlignment or Enum.TextXAlignment.Center
                 t.button.TextYAlignment = theme.tab_button.textYAlignment or Enum.TextYAlignment.Center
                 -- compute target state: on, hover(off+hover), or off
                 local isOn = (t.visible == true)
                 local isHover = (not isOn) and (t._hover == true)
                 if isOn then
-                    t.button.TextColor3 = theme.tab_button.on.textColor
+                    tween(t.button, { TextColor3 = theme.tab_button.on.textColor })
                     local g = setUIGradient(t.button, theme.tab_button.on.gradient.ColorSequence, theme.tab_button.on.gradient.Rotation)
                     if g then t.buttonGradient = g end
                 elseif isHover then
-                    t.button.TextColor3 = theme.tab_button.hover.textColor
+                    tween(t.button, { TextColor3 = theme.tab_button.hover.textColor })
                     local g = setUIGradient(t.button, theme.tab_button.hover.gradient.ColorSequence, theme.tab_button.hover.gradient.Rotation)
                     if g then t.buttonGradient = g end
                 else
-                    t.button.TextColor3 = theme.tab_button.off.textColor
+                    tween(t.button, { TextColor3 = theme.tab_button.off.textColor })
                     local g = setUIGradient(t.button, theme.tab_button.off.gradient.ColorSequence, theme.tab_button.off.gradient.Rotation)
                     if g then t.buttonGradient = g end
                 end
@@ -907,11 +970,11 @@ function redwine.new(redwineSettings)
                     t.padding.PaddingRight = theme.tab_button.off.padding.right
                     t.padding.PaddingTop = theme.tab_button.off.padding.top
                     if isOn and theme.tab_button.hover then
-                        t.padding.PaddingBottom = theme.tab_button.hover.padding.bottom
+                        tween(t.padding, { PaddingBottom = theme.tab_button.hover.padding.bottom })
                     elseif isHover then
-                        t.padding.PaddingBottom = theme.tab_button.hover.padding.bottom
+                        tween(t.padding, { PaddingBottom = theme.tab_button.hover.padding.bottom })
                     else
-                        t.padding.PaddingBottom = theme.tab_button.off.padding.bottom
+                        tween(t.padding, { PaddingBottom = theme.tab_button.off.padding.bottom })
                     end
                 else
                     local p = setUIPadding(t.button, theme.tab_button.off.padding)
@@ -920,11 +983,13 @@ function redwine.new(redwineSettings)
             end
             -- container
             if t.container then
-                t.container.BackgroundColor3 = theme.tabcontainer.background
-                t.container.BackgroundTransparency = theme.tabcontainer.backgroundtransparency
+                tween(t.container, {
+                    BackgroundColor3 = theme.tabcontainer.background,
+                    BackgroundTransparency = theme.tabcontainer.backgroundtransparency,
+                    Size = theme.tabcontainer.size,
+                    Position = theme.tabcontainer.position,
+                })
                 t.container.AnchorPoint = theme.tabcontainer.anchorPoint
-                t.container.Size = theme.tabcontainer.size
-                t.container.Position = theme.tabcontainer.position
                 setUIPadding(t.container, theme.tabcontainer.padding)
 
                 -- update cards in both sections if present
