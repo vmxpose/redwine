@@ -1,6 +1,15 @@
 local helpers = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/helpers.lua"))()
 local styles = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/styles.lua"))()
 
+-- Centralized ZIndex hierarchy
+local Z = {
+    REST = 1,        -- background, chrome
+    CONTAINER = 5,   -- tab content container and sections
+    CARD = 10,       -- card frames
+    COMPONENT = 20,  -- controls inside cards and tab buttons
+    POPOUT = 50,     -- dropdown lists, colorpicker panels
+}
+
 local redwine = {}
 
 redwine.flags = {}
@@ -47,6 +56,7 @@ function redwine.new(redwineSettings)
             BackgroundColor3 = window.theme.main_frame.background,
             BackgroundTransparency = window.theme.main_frame.backgroundtransparency,
             BorderSizePixel = 0,
+            ZIndex = Z.REST,
             ClipsDescendants = true,
             Visible = true,
             Parent = window.redwinegui
@@ -78,6 +88,7 @@ function redwine.new(redwineSettings)
             Position = window.theme.topbar.position,
             BackgroundColor3 = window.theme.topbar.background,
             BackgroundTransparency = window.theme.topbar.backgroundtransparency,
+            ZIndex = Z.REST + 1,
             BorderSizePixel = 0,
             Visible = true,
             Parent = window.main_frame
@@ -160,6 +171,7 @@ function redwine.new(redwineSettings)
             BackgroundColor3 = Color3.fromRGB(255, 255, 255),
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
+            ZIndex = Z.REST + 2,
             Font = window.theme.windowtitle.textFont,
             Text = window.settings.name or "red wine",
             TextColor3 = window.theme.windowtitle.textColor,
@@ -194,6 +206,7 @@ function redwine.new(redwineSettings)
             BackgroundColor3 = window.theme.tab_buttons.background,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
+            ZIndex = Z.COMPONENT,
             ScrollBarThickness = 1,
             CanvasSize = UDim2.new(0, 0, 0, 0),
             Parent = window.main_frame
@@ -641,6 +654,7 @@ function redwine.new(redwineSettings)
                 AnchorPoint = window.theme.tab_button.anchorPoint,
                 AutomaticSize = Enum.AutomaticSize.X,
                 Size = window.theme.tab_button.size,
+                ZIndex = Z.COMPONENT,
                 Parent = window.tab_buttons,
                 Font = window.theme.tab_button.textFont,
                 Text = tab.settings.name or "tab",
@@ -676,6 +690,7 @@ function redwine.new(redwineSettings)
                 Size = UDim2.new(0, 0, 0, 2),
                 Position = window.theme.indicator.position,
                 BackgroundColor3 = window.theme.indicator.background,
+                ZIndex = Z.COMPONENT + 1,
                 AutomaticSize = Enum.AutomaticSize.X,
                 BackgroundTransparency = 0,
                 BorderSizePixel = 0,
@@ -700,6 +715,7 @@ function redwine.new(redwineSettings)
                 AnchorPoint = window.theme.tabcontainer.anchorPoint,
                 Size = window.theme.tabcontainer.size,
                 Position = window.theme.tabcontainer.position,
+                ZIndex = Z.CONTAINER,
                 ScrollBarThickness = 0,
                 CanvasSize = UDim2.new(0, 0, 0, 0),
                 Visible = tab.visible,
@@ -729,6 +745,7 @@ function redwine.new(redwineSettings)
                 AutomaticSize = window.theme.tabsection.automaticSize,
                 Size = window.theme.tabsection.size,
                 Position = window.theme.tabsection.left.position,
+                ZIndex = Z.CONTAINER,
                 Parent = tab.container
             }
         )
@@ -745,6 +762,7 @@ function redwine.new(redwineSettings)
                 AutomaticSize = window.theme.tabsection.automaticSize,
                 Size = window.theme.tabsection.size,
                 Position = window.theme.tabsection.right.position,
+                ZIndex = Z.CONTAINER,
                 Parent = tab.container
             }
         )
@@ -957,6 +975,7 @@ function redwine.new(redwineSettings)
                     AnchorPoint = window.theme.card.anchorPoint,
                     Size = window.theme.card.size,
                     AutomaticSize = window.theme.card.automaticSize,
+                    ZIndex = Z.CARD,
                     Parent = tab.container[card.settings.section .. "_section"] or tab.container.left_section
                 }
             )
@@ -996,6 +1015,7 @@ function redwine.new(redwineSettings)
                     AnchorPoint = window.theme.cardtitle.anchorPoint,
                     Size = window.theme.cardtitle.size,
                     Position = window.theme.cardtitle.position,
+                    ZIndex = Z.CARD + 1,
                     Font = window.theme.cardtitle.textFont,
                     TextColor3 = window.theme.cardtitle.textColor,
                     TextSize = window.theme.cardtitle.textSize,
@@ -1030,6 +1050,7 @@ function redwine.new(redwineSettings)
                     Size = window.theme.cardcontent.size,
                     AnchorPoint = window.theme.cardcontent.anchorPoint,
                     AutomaticSize = window.theme.cardcontent.automaticSize,
+                    ZIndex = Z.CARD + 1,
                     Parent = card.frame
                 }
             )
@@ -1067,6 +1088,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.richTextLabel.textFont,
                         TextColor3 = window.theme.richTextLabel.textColor,
                         TextSize = window.theme.richTextLabel.textSize,
@@ -1134,6 +1156,7 @@ function redwine.new(redwineSettings)
                         Position = window.theme.button.singlewide.position,
                         AutomaticSize = window.theme.button.singlewide.automaticSize,
                         Size = window.theme.button.singlewide.size,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.button.singlewide.textFont,
                         TextColor3 = window.theme.button.singlewide.textColor,
                         TextSize = window.theme.button.singlewide.textSize,
@@ -1197,6 +1220,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.button.subtext.richTextLabel.textFont,
                         TextColor3 = window.theme.button.subtext.richTextLabel.textColor,
                         TextSize = window.theme.button.subtext.richTextLabel.textSize,
@@ -1232,6 +1256,7 @@ function redwine.new(redwineSettings)
                         Position = window.theme.button.subtext.position,
                         AutomaticSize = window.theme.button.subtext.automaticSize,
                         Size = window.theme.button.subtext.size,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.button.subtext.textFont,
                         TextColor3 = window.theme.button.subtext.textColor,
                         TextSize = window.theme.button.subtext.textSize,
@@ -1296,6 +1321,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.toggle.richTextLabel.textFont,
                         TextColor3 = window.theme.toggle.richTextLabel.textColor,
                         TextSize = window.theme.toggle.richTextLabel.textSize,
@@ -1329,6 +1355,7 @@ function redwine.new(redwineSettings)
                         AnchorPoint = window.theme.toggle.button.anchorPoint,
                         Size = window.theme.toggle.button.size,
                         Position = window.theme.toggle.button.position,
+                        ZIndex = Z.COMPONENT + 1,
                         Parent = toggle.frame,
                         Image = window.theme.toggle.button.image,
                         ImageTransparency = (toggle.value and 0 or 1)
@@ -1417,6 +1444,7 @@ function redwine.new(redwineSettings)
                         Position = window.theme.textbox.singlewide.position,
                         AutomaticSize = window.theme.textbox.singlewide.automaticSize,
                         Size = window.theme.textbox.singlewide.size,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.textbox.singlewide.textFont,
                         TextColor3 = window.theme.textbox.singlewide.textColor,
                         TextSize = window.theme.textbox.singlewide.textSize,
@@ -1449,6 +1477,7 @@ function redwine.new(redwineSettings)
                         AutomaticSize = Enum.AutomaticSize.X,
                         BackgroundTransparency = 0,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT + 1,
                         Parent = textbox.textbox
                     }
                 )
@@ -1578,6 +1607,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.textbox.subtext.richTextLabel.textFont,
                         TextColor3 = window.theme.textbox.subtext.richTextLabel.textColor,
                         TextSize = window.theme.textbox.subtext.richTextLabel.textSize,
@@ -1617,6 +1647,7 @@ function redwine.new(redwineSettings)
                         Position = window.theme.textbox.subtext.position,
                         AutomaticSize = window.theme.textbox.subtext.automaticSize,
                         Size = window.theme.textbox.subtext.size,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.textbox.subtext.textFont,
                         TextColor3 = window.theme.textbox.subtext.textColor,
                         TextSize = window.theme.textbox.subtext.textSize,
@@ -1648,6 +1679,7 @@ function redwine.new(redwineSettings)
                         AutomaticSize = Enum.AutomaticSize.X,
                         BackgroundTransparency = 0,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT + 1,
                         Parent = textbox.textbox
                     }
                 )
@@ -1776,6 +1808,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.textbox.inline.richTextLabel.textFont,
                         TextColor3 = window.theme.textbox.inline.richTextLabel.textColor,
                         TextSize = window.theme.textbox.inline.richTextLabel.textSize,
@@ -1814,6 +1847,7 @@ function redwine.new(redwineSettings)
                         AnchorPoint = window.theme.textbox.inline.anchorPoint,
                         Position = window.theme.textbox.inline.position,
                         Size = window.theme.textbox.inline.size,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.textbox.inline.textFont,
                         TextColor3 = window.theme.textbox.inline.textColor,
                         TextSize = window.theme.textbox.inline.textSize,
@@ -1896,6 +1930,7 @@ function redwine.new(redwineSettings)
                         AutomaticSize = Enum.AutomaticSize.X,
                         BackgroundTransparency = 0,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT + 1,
                         Parent = textbox.textbox
                     }
                 )
@@ -1987,6 +2022,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.button.subtext.richTextLabel.textFont,
                         TextColor3 = window.theme.button.subtext.richTextLabel.textColor,
                         TextSize = window.theme.button.subtext.richTextLabel.textSize,
@@ -2023,6 +2059,7 @@ function redwine.new(redwineSettings)
                         Position = window.theme.button.subtext.position,
                         AutomaticSize = window.theme.button.subtext.automaticSize,
                         Size = window.theme.button.subtext.size,
+                        ZIndex = Z.COMPONENT,
                         Font = window.theme.button.subtext.textFont,
                         TextColor3 = window.theme.button.subtext.textColor,
                         TextSize = window.theme.button.subtext.textSize,
@@ -2219,6 +2256,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = theme.richTextLabel.textFont,
                         TextColor3 = theme.richTextLabel.textColor,
                         TextSize = theme.richTextLabel.textSize,
@@ -2254,6 +2292,7 @@ function redwine.new(redwineSettings)
                         AnchorPoint = theme.button.anchorPoint,
                         Position = theme.button.position,
                         Size = theme.button.size,
+                        ZIndex = Z.COMPONENT,
                         Font = theme.button.textFont,
                         TextColor3 = theme.button.textColor,
                         TextSize = theme.button.textSize,
@@ -2345,6 +2384,7 @@ function redwine.new(redwineSettings)
                         AnchorPoint = theme.items.anchorPoint,
                         Position = theme.items.position,
                         Size = theme.items.size,
+                        ZIndex = Z.POPOUT,
                         AutomaticCanvasSize = Enum.AutomaticSize.Y,
                         ScrollBarThickness = theme.items.scrollBarThickness,
                         ScrollBarImageColor3 = theme.items.scrollBarColor,
@@ -2410,6 +2450,7 @@ function redwine.new(redwineSettings)
                             BorderSizePixel = 0,
                             AnchorPoint = Vector2.new(0.5, 0.5),
                             Size = theme.items.itemButton.size,
+                            ZIndex = Z.POPOUT + 1,
                             Font = theme.items.itemButton.textFont,
                             TextColor3 = theme.items.itemButton.textColor,
                             TextSize = theme.items.itemButton.textSize,
@@ -2617,6 +2658,7 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
+                        ZIndex = Z.COMPONENT,
                         Font = theme.richTextLabel.textFont,
                         TextColor3 = theme.richTextLabel.textColor,
                         TextSize = theme.richTextLabel.textSize,
@@ -2652,6 +2694,7 @@ function redwine.new(redwineSettings)
                         AnchorPoint = theme.button.anchorPoint,
                         Position = theme.button.position,
                         Size = theme.button.size,
+                        ZIndex = Z.COMPONENT,
                         Font = theme.button.textFont,
                         TextColor3 = theme.button.textColor,
                         TextSize = theme.button.textSize,
@@ -2751,6 +2794,7 @@ function redwine.new(redwineSettings)
                         AnchorPoint = swatchTheme.anchorPoint or Vector2.new(0, 0.5),
                         Size = swatchTheme.size or UDim2.new(0, 16, 0, 16),
                         Position = swatchTheme.position or UDim2.new(0, -20, 0.5, 0),
+                        ZIndex = Z.COMPONENT + 1,
                         Parent = cp.button
                     }
                 )
@@ -3138,6 +3182,7 @@ function redwine.new(redwineSettings)
                     BackgroundColor3 = Color3.fromRGB(255,255,255),
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
+                    ZIndex = Z.COMPONENT,
                     Font = theme.richTextLabel.textFont,
                     TextColor3 = theme.richTextLabel.textColor,
                     TextSize = theme.richTextLabel.textSize,
@@ -3165,6 +3210,7 @@ function redwine.new(redwineSettings)
                     AnchorPoint = theme.track.anchorPoint,
                     Position = theme.track.position,
                     Size = theme.track.size,
+                    ZIndex = Z.COMPONENT,
                     Parent = s.frame,
                 })
                 helpers.appendUICorner(s.track, theme.track.cornerRadius)
@@ -3179,6 +3225,7 @@ function redwine.new(redwineSettings)
                     AnchorPoint = Vector2.new(0, 0.5),
                     Position = UDim2.new(0, 0, 0.5, 0),
                     Size = UDim2.new(0, 0, 1, 0),
+                    ZIndex = Z.COMPONENT + 1,
                     Parent = s.track,
                 })
                 helpers.appendUICorner(s.fill, theme.fill.cornerRadius)
@@ -3193,6 +3240,7 @@ function redwine.new(redwineSettings)
                     AnchorPoint = Vector2.new(0.5, 0.5),
                     Size = theme.thumb.size,
                     Position = UDim2.new(0, 0, 0.5, 0),
+                    ZIndex = Z.COMPONENT + 2,
                     Parent = s.track,
                 })
                 helpers.appendUICorner(s.thumb, theme.thumb.cornerRadius)
@@ -3209,6 +3257,7 @@ function redwine.new(redwineSettings)
                     AnchorPoint = theme.number.anchorPoint,
                     Position = theme.number.position,
                     Size = theme.number.size,
+                    ZIndex = Z.COMPONENT,
                     Font = theme.number.textFont,
                     TextColor3 = theme.number.textColor,
                     TextSize = theme.number.textSize,
