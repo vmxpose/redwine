@@ -52,7 +52,7 @@ function redwine.new(redwineSettings)
             Name = "main_ui",
             AnchorPoint = window.theme.main_frame.anchorPoint,
             Size = window.theme.main_frame.size,
-            Position = window.theme.main_frame.position,
+            Position = UDim2.new(0.5, 0, 0.5, 0),
             BackgroundColor3 = window.theme.main_frame.background,
             BackgroundTransparency = window.theme.main_frame.backgroundtransparency,
             BorderSizePixel = 0,
