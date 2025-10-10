@@ -298,7 +298,6 @@ function redwine.new(redwineSettings)
         if window.main_frame then
             window.main_frame.AnchorPoint = theme.main_frame.anchorPoint
             window.main_frame.Size = theme.main_frame.size
-            window.main_frame.Position = theme.main_frame.position
             window.main_frame.BackgroundColor3 = theme.main_frame.background
             window.main_frame.BackgroundTransparency = theme.main_frame.backgroundtransparency
             setUICorner(window.main_frame, theme.main_frame.cornerRadius)
