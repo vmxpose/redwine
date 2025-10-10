@@ -23,8 +23,7 @@ styles.default = {
             Rotation = 90
         },
         anchorPoint = Vector2.new(0.5, 0.5),
-        size = UDim2.new(0, 500, 0, 500),
-        position = UDim2.new(0.5, 0, 0.5, 0)
+        size = UDim2.new(0, 500, 0, 500)
     },
     topbar = {
         background = Color3.fromRGB(75, 0, 0),
@@ -1063,7 +1062,6 @@ styles.dark = {
         },
         anchorPoint = Vector2.new(0.5, 0.5),
         size = UDim2.new(0, 500, 0, 500),
-        position = UDim2.new(0.5, 0, 0.5, 0)
     },
     topbar = {
         background = Color3.fromRGB(75, 75, 75),
