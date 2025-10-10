@@ -1430,10 +1430,11 @@ function redwine.new(redwineSettings)
                 FS.setAutoload(v and name or "")
             end
         })
+                
 
-        local function refreshList()
+        local function refreshList(dropdown)
             local items = self:listConfigs()
-            configsDropdown:set(items)
+            dropdown:set(items)
         end
 
         -- Save/Load/Refresh buttons
@@ -1478,7 +1479,6 @@ function redwine.new(redwineSettings)
             refreshList()
         end })
 
-        -- Config files list and selection
         local configsDropdown = cardFiles:dropdown({
             name = "configs_list",
             variant = "inline",
@@ -1504,6 +1504,9 @@ function redwine.new(redwineSettings)
                 end
             end
         })
+
+        -- Config files list and selection
+        
 
         return tab
     end
