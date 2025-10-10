@@ -886,10 +886,16 @@ function redwine.new(redwineSettings)
                 t.button.TextSize = theme.tab_button.textSize
                 t.button.TextXAlignment = theme.tab_button.textXAlignment or Enum.TextXAlignment.Center
                 t.button.TextYAlignment = theme.tab_button.textYAlignment or Enum.TextYAlignment.Center
-                if t.visible then
+                -- compute target state: on, hover(off+hover), or off
+                local isOn = (t.visible == true)
+                local isHover = (not isOn) and (t._hover == true)
+                if isOn then
                     t.button.TextColor3 = theme.tab_button.on.textColor
                     local g = setUIGradient(t.button, theme.tab_button.on.gradient.ColorSequence, theme.tab_button.on.gradient.Rotation)
-                    -- keep reference consistent if code uses it
+                    if g then t.buttonGradient = g end
+                elseif isHover then
+                    t.button.TextColor3 = theme.tab_button.hover.textColor
+                    local g = setUIGradient(t.button, theme.tab_button.hover.gradient.ColorSequence, theme.tab_button.hover.gradient.Rotation)
                     if g then t.buttonGradient = g end
                 else
                     t.button.TextColor3 = theme.tab_button.off.textColor
@@ -897,13 +903,17 @@ function redwine.new(redwineSettings)
                     if g then t.buttonGradient = g end
                 end
                 if t.padding then
-                    -- update existing padding object if present
                     t.padding.PaddingLeft = theme.tab_button.off.padding.left
                     t.padding.PaddingRight = theme.tab_button.off.padding.right
                     t.padding.PaddingTop = theme.tab_button.off.padding.top
-                    t.padding.PaddingBottom = (t.visible and (theme.tab_button.hover and theme.tab_button.hover.padding.bottom) or theme.tab_button.off.padding.bottom)
+                    if isOn and theme.tab_button.hover then
+                        t.padding.PaddingBottom = theme.tab_button.hover.padding.bottom
+                    elseif isHover then
+                        t.padding.PaddingBottom = theme.tab_button.hover.padding.bottom
+                    else
+                        t.padding.PaddingBottom = theme.tab_button.off.padding.bottom
+                    end
                 else
-                    -- ensure some padding exists
                     local p = setUIPadding(t.button, theme.tab_button.off.padding)
                     t.padding = p
                 end
@@ -1287,21 +1297,22 @@ function redwine.new(redwineSettings)
             }
         )
 
-        -- insert tab button, padding, and indicator into tabs table
-        table.insert(
-            tabs,
-            {
-                button = tab.button,
-                padding = tab.padding,
-                indicator = tab.indicator,
-                container = tab.container
-            }
-        )
+        -- insert tab entry into tabs table and keep a back-reference for state syncing
+        local _entry = {
+            button = tab.button,
+            padding = tab.padding,
+            indicator = tab.indicator,
+            container = tab.container,
+            visible = tab.visible or false,
+        }
+        table.insert(tabs, _entry)
+        tab._tabsEntry = _entry
 
         -- hover feedback for tab button (only when not selected)
         tab.button.MouseEnter:Connect(
             function()
                 if not tab.visible then
+                    if tab._tabsEntry then tab._tabsEntry._hover = true end
                     helpers.tweenObject(
                         tab.button,
                         {TextColor3 = window.theme.tab_button.hover.textColor},
@@ -1328,6 +1339,7 @@ function redwine.new(redwineSettings)
         tab.button.MouseLeave:Connect(
             function()
                 if not tab.visible then
+                    if tab._tabsEntry then tab._tabsEntry._hover = false end
                     helpers.tweenObject(
                         tab.button,
                         {TextColor3 = window.theme.tab_button.off.textColor},
@@ -1415,6 +1427,10 @@ function redwine.new(redwineSettings)
             -- tween textcolor to on color
             tab.container.Visible = true
             tab.visible = true
+            if tab._tabsEntry then
+                tab._tabsEntry.visible = true
+                tab._tabsEntry._hover = false
+            end
         end
 
         tab.button.MouseButton1Click:Connect(
