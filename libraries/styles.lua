@@ -2062,7 +2062,7 @@ styles.light = {
         backgroundtransparency = 0.05,
         cornerRadius = 2,
         stroke = {
-            color = Color3.fromRGB(0, 0, 0),
+            color = Color3.fromRGB(255, 255, 255), -- was 0,0,0
             thickness = 2,
             strokeMode = Enum.ApplyStrokeMode.Border,
             lineJoinMode = Enum.LineJoinMode.Round
@@ -2089,7 +2089,7 @@ styles.light = {
         gradient = {
             ColorSequence = ColorSequence.new(
                 {
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),   -- was 255,255,255
                     ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 150, 150))
                 }
             ),
@@ -2100,7 +2100,7 @@ styles.light = {
         position = UDim2.new(0.5, 0, 0, 0)
     },
     windowtitle = {
-        textColor = Color3.fromRGB(255, 255, 255),
+        textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
         textSize = 16,
         textFont = Enum.Font.RobotoMono,
         textalignment = Enum.TextXAlignment.Left,
@@ -2108,7 +2108,7 @@ styles.light = {
             ColorSequence = ColorSequence.new(
                 {
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
-                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(0, 0, 0)) -- was 255,255,255
                 }
             ),
             Rotation = 0
@@ -2124,7 +2124,7 @@ styles.light = {
         position = UDim2.new(0, 0, 0.5, 0)
     },
     tab_buttons = {
-        background = Color3.fromRGB(255, 255, 255),
+        background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
         size = UDim2.new(1, 0, 0, 30),
@@ -2149,7 +2149,7 @@ styles.light = {
                 ColorSequence = ColorSequence.new(
                     {
                         ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
-                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(0, 0, 0)) -- was 255,255,255
                     }
                 ),
                 Rotation = 45
@@ -2162,11 +2162,11 @@ styles.light = {
             }
         },
         on = {
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             gradient = {
                 ColorSequence = ColorSequence.new(
                     {
-                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)), -- was 255,255,255
                         ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 150, 150))
                     }
                 ),
@@ -2174,12 +2174,12 @@ styles.light = {
             }
         },
         hover = {
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             gradient = {
                 ColorSequence = ColorSequence.new(
                     {
                         ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 200, 200)),
-                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(0, 0, 0)) -- was 255,255,255
                     }
                 ),
                 Rotation = 90
@@ -2211,7 +2211,7 @@ styles.light = {
         }
     },
     tabcontainer = {
-        background = Color3.fromRGB(255, 255, 255),
+        background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
         size = UDim2.new(0, 500, 0, 435),
@@ -2224,7 +2224,7 @@ styles.light = {
         }
     },
     tabsection = {
-        background = Color3.fromRGB(255, 255, 255),
+        background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
         automaticSize = Enum.AutomaticSize.Y,
@@ -2285,7 +2285,7 @@ styles.light = {
         }
     },
     cardtitle = {
-        textColor = Color3.fromRGB(255, 255, 255),
+        textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
         textSize = 14,
         textFont = Enum.Font.RobotoMono,
         textalignment = Enum.TextXAlignment.Left,
@@ -2293,7 +2293,7 @@ styles.light = {
             ColorSequence = ColorSequence.new(
                 {
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
-                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(0, 0, 0)) -- was 255,255,255
                 }
             ),
             Rotation = 0
@@ -2326,7 +2326,7 @@ styles.light = {
         }
     },
     richTextLabel = {
-        textColor = Color3.fromRGB(255, 255, 255),
+        textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
         textSize = 14,
         textFont = Enum.Font.RobotoMono,
         textalignment = Enum.TextXAlignment.Left,
@@ -2353,7 +2353,7 @@ styles.light = {
             position = UDim2.new(0.5, 0, 0.5, 0),
             automaticSize = Enum.AutomaticSize.Y,
             size = UDim2.new(0, 220, 0, 25),
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
             textAlignment = Enum.TextXAlignment.Center,
@@ -2367,7 +2367,7 @@ styles.light = {
         },
         subtext = {
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 12,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2392,7 +2392,7 @@ styles.light = {
             position = UDim2.new(0.5, 0, 0.75, 0),
             automaticSize = Enum.AutomaticSize.Y,
             size = UDim2.new(0, 220, 0, 25),
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
             textAlignment = Enum.TextXAlignment.Center,
@@ -2409,11 +2409,11 @@ styles.light = {
         frame = {
             size = UDim2.new(0, 240, 0, 30),
             anchorPoint = Vector2.new(0.5, 0.5),
-            background = Color3.fromRGB(255, 255, 255),
+            background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             backgroundTransparency = 1
         },
         richTextLabel = {
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
             textalignment = Enum.TextXAlignment.Left,
@@ -2448,7 +2448,7 @@ styles.light = {
     textbox = {
         subtext = {
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2474,7 +2474,7 @@ styles.light = {
             position = UDim2.new(0.5, 0, 0.75, 0),
             automaticSize = Enum.AutomaticSize.Y,
             size = UDim2.new(0, 220, 0, 25),
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
             textAlignment = Enum.TextXAlignment.Center,
@@ -2494,7 +2494,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2515,7 +2515,7 @@ styles.light = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.72413, 0, 0.5, 0),
             size = UDim2.new(0, 110, 0, 25),
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             swatch = {
                 size = UDim2.new(0, 16, 0, 16),
                 position = UDim2.new(0, -20, 0.5, 0),
@@ -2546,7 +2546,7 @@ styles.light = {
             position = UDim2.new(0.5, 0, 0.5, 0),
             automaticSize = Enum.AutomaticSize.Y,
             size = UDim2.new(0, 220, 0, 25),
-            textColor = Color3.fromRGB(255, 255, 255),
+            textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
             textAlignment = Enum.TextXAlignment.Center,
@@ -2585,7 +2585,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2607,7 +2607,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5),
                 position = UDim2.new(0.72413, 0, 0.5, 0),
                 size = UDim2.new(0, 110, 0, 25),
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textAlignment = Enum.TextXAlignment.Center,
@@ -2642,7 +2642,7 @@ styles.light = {
                     background = Color3.fromRGB(26, 26, 26),
                     backgroundTransparency = 0.75,
                     size = UDim2.new(0, 110, 0, 36),
-                    textColor = Color3.fromRGB(255, 255, 255),
+                    textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                     textSize = 14,
                     textFont = Enum.Font.RobotoMono,
                     textAlignment = Enum.TextXAlignment.Center,
@@ -2662,7 +2662,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2684,7 +2684,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5),
                 position = UDim2.new(0.5, 0, 0.75, 0),
                 size = UDim2.new(0, 220, 0, 25),
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 swatch = {
                     size = UDim2.new(0, 16, 0, 16),
                     position = UDim2.new(0, -20, 0.5, 0),
@@ -2726,7 +2726,7 @@ styles.light = {
                     background = Color3.fromRGB(26, 26, 26),
                     backgroundTransparency = 0.75,
                     size = UDim2.new(0, 220, 0, 36),
-                    textColor = Color3.fromRGB(255, 255, 255),
+                    textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                     textSize = 14,
                     textFont = Enum.Font.RobotoMono,
                     textAlignment = Enum.TextXAlignment.Center,
@@ -2748,7 +2748,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2770,7 +2770,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5),
                 position = UDim2.new(0.72413, 0, 0.5, 0),
                 size = UDim2.new(0, 110, 0, 25),
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textAlignment = Enum.TextXAlignment.Left,
@@ -2830,7 +2830,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2852,7 +2852,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5),
                 position = UDim2.new(0.5, 0, 0.75, 0),
                 size = UDim2.new(0, 220, 0, 25),
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textAlignment = Enum.TextXAlignment.Left,
@@ -2914,7 +2914,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5),
             },
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -2960,7 +2960,7 @@ styles.light = {
             },
             thumb = {
                 size = UDim2.new(0, 12, 0, 12),
-                background = Color3.fromRGB(255, 255, 255),
+                background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 backgroundTransparency = 0,
                 cornerRadius = 6,
                 stroke = {
@@ -2976,7 +2976,7 @@ styles.light = {
                 anchorPoint = Vector2.new(1, 0.5),
                 position = UDim2.new(1, -10, 0.75, 0),
                 size = UDim2.new(0, 56, 0, 22),
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textAlignment = Enum.TextXAlignment.Center,
@@ -2996,7 +2996,7 @@ styles.light = {
                 anchorPoint = Vector2.new(0.5, 0.5),
             },
             richTextLabel = {
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textalignment = Enum.TextXAlignment.Left,
@@ -3042,7 +3042,7 @@ styles.light = {
             },
             thumb = {
                 size = UDim2.new(0, 12, 0, 12),
-                background = Color3.fromRGB(255, 255, 255),
+                background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 backgroundTransparency = 0,
                 cornerRadius = 6,
                 stroke = {
@@ -3058,7 +3058,7 @@ styles.light = {
                 anchorPoint = Vector2.new(1, 0.5),
                 position = UDim2.new(1, -10, 0.5, 0),
                 size = UDim2.new(0, 44, 0, 22),
-                textColor = Color3.fromRGB(255, 255, 255),
+                textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
                 textSize = 14,
                 textFont = Enum.Font.RobotoMono,
                 textAlignment = Enum.TextXAlignment.Center,
@@ -3074,5 +3074,6 @@ styles.light = {
         },
     }
 }
+
 
 return styles
