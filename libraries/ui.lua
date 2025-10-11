@@ -1469,19 +1469,15 @@ function redwine.new(redwineSettings)
         -- List and Autoload on right
         local cardList = tab:createCard({ title = "Available", section = "right" })
         local available = {}
-        local listDrop = cardList:dropdown({
-            name = "cfg_list",
-            variant = "inline",
-            label = "Configs",
-            items = {},
-            multi = false,
-            placeholder = "select a config",
-            onChanged = function(selected)
-                local first = (type(selected) == "table" and selected[1]) or selected
-                if type(first) == "string" then
-                    currentName = first
-                    nameBox:set(first)
-                end
+        local listBox = cardList:inlinetextbox({
+            name = "cfg_pick",
+            subtext = "Config name",
+            placeholder = "type a config name",
+            text = currentName or "",
+            post = {"Text"},
+            callback = function(txt)
+            currentName = txt
+            nameBox:set(txt)
             end,
         })
 
