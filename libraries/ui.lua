@@ -1441,7 +1441,6 @@ function redwine.new(redwineSettings)
             callback = function()
                 local ok, err = self:deleteConfig(currentName)
                 print("[config] delete:", currentName, ok, err)
-                refreshList()
             end,
         })
 
@@ -1462,7 +1461,6 @@ function redwine.new(redwineSettings)
                 local ok, err = self:renameConfig(currentName, newName, overwrite)
                 print("[config] rename:", currentName, "->", newName, ok, err)
                 if ok then currentName = newName; nameBox:set(newName) end
-                refreshList()
             end,
         })
 
@@ -1507,21 +1505,6 @@ function redwine.new(redwineSettings)
                 self:applyAutoload()
             end,
         })
-
-        -- helper to refresh dropdown items
-        function refreshList()
-            available = self:listConfigs()
-            listDrop.settings.items = available
-            -- simple refresh: destroy and recreate item buttons from settings
-            -- use existing dropdown setter to re-render text
-            if currentName == "" and available[1] then
-                currentName = available[1]
-                nameBox:set(currentName)
-            end
-            listDrop:set(currentName ~= "" and {currentName} or {})
-        end
-
-        refreshList()
         return tab
     end
 
