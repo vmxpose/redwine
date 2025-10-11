@@ -1422,7 +1422,6 @@ function redwine.new(redwineSettings)
                 local ok, err = self:saveConfig(currentName, overwrite)
                 print("[config] save:", currentName, ok, err)
                 self:_applyTheme()
-                refreshList()
             end,
         })
 
