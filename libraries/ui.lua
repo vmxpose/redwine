@@ -859,11 +859,22 @@ function redwine.new(redwineSettings)
 
                 local function updateDropdown(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    -- infer variant by frame height
-                    local var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
-                    local dtheme = theme.dropdown[var]
+                    local varAttr = container:GetAttribute("dropdown_variant")
+                    local var
+                    if varAttr == "subtext" or varAttr == "inline" then
+                        var = varAttr
+                    else
+                        var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
+                    end
+                    local dtheme = theme.dropdown[var] or theme.dropdown.inline
                     if not dtheme then return end
-                    tween(container, { Size = dtheme.frame.size })
+                    local autoSize = dtheme.frame.automaticSize or Enum.AutomaticSize.None
+                    container.AutomaticSize = autoSize
+                    if autoSize == Enum.AutomaticSize.None then
+                        tween(container, { Size = dtheme.frame.size })
+                    else
+                        container.Size = dtheme.frame.size
+                    end
                     container.AnchorPoint = dtheme.frame.anchorPoint
                     local lbl = container:FindFirstChild("dropdown_label")
                     if lbl and lbl.ClassName == "TextLabel" then
@@ -937,11 +948,22 @@ function redwine.new(redwineSettings)
 
                 local function updateColorpicker(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    -- infer variant by frame height
-                    local var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
-                    local ctheme = theme.colorpicker[var]
+                    local varAttr = container:GetAttribute("colorpicker_variant")
+                    local var
+                    if varAttr == "subtext" or varAttr == "inline" then
+                        var = varAttr
+                    else
+                        var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
+                    end
+                    local ctheme = theme.colorpicker[var] or theme.colorpicker.inline
                     if not ctheme then return end
-                    tween(container, { Size = ctheme.frame.size })
+                    local autoSize = ctheme.frame.automaticSize or Enum.AutomaticSize.None
+                    container.AutomaticSize = autoSize
+                    if autoSize == Enum.AutomaticSize.None then
+                        tween(container, { Size = ctheme.frame.size })
+                    else
+                        container.Size = ctheme.frame.size
+                    end
                     container.AnchorPoint = ctheme.frame.anchorPoint
                     local lbl = container:FindFirstChild("colorpicker_label")
                     if lbl and lbl.ClassName == "TextLabel" then
@@ -1022,10 +1044,22 @@ function redwine.new(redwineSettings)
 
                 local function updateSlider(container)
                     if not container or container.ClassName ~= "Frame" then return end
-                    local var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
-                    local stheme = theme.slider[var]
+                    local varAttr = container:GetAttribute("slider_variant")
+                    local var
+                    if varAttr == "subtext" or varAttr == "inline" then
+                        var = varAttr
+                    else
+                        var = (container.Size.Y.Offset and container.Size.Y.Offset >= 60) and "subtext" or "inline"
+                    end
+                    local stheme = theme.slider[var] or theme.slider.inline
                     if not stheme then return end
-                    tween(container, { Size = stheme.frame.size })
+                    local autoSize = stheme.frame.automaticSize or Enum.AutomaticSize.None
+                    container.AutomaticSize = autoSize
+                    if autoSize == Enum.AutomaticSize.None then
+                        tween(container, { Size = stheme.frame.size })
+                    else
+                        container.Size = stheme.frame.size
+                    end
                     container.AnchorPoint = stheme.frame.anchorPoint
                     local lbl = container:FindFirstChild("slider_label")
                     if lbl and lbl.ClassName == "TextLabel" then
@@ -2927,6 +2961,7 @@ function redwine.new(redwineSettings)
                     {
                         Name = (dd.settings.name or "dropdown") .. "_frame",
                         Size = theme.frame.size,
+                        AutomaticSize = theme.frame.automaticSize or Enum.AutomaticSize.None,
                         AnchorPoint = theme.frame.anchorPoint,
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
@@ -2934,6 +2969,8 @@ function redwine.new(redwineSettings)
                         Parent = card.content
                     }
                 )
+
+                dd.frame:SetAttribute("dropdown_variant", variant)
 
                 -- label (inline = left, subtext = top)
                 dd.label =
@@ -3345,6 +3382,7 @@ function redwine.new(redwineSettings)
                     {
                         Name = (cp.settings.name or "colorpicker") .. "_frame",
                         Size = theme.frame.size,
+                        AutomaticSize = theme.frame.automaticSize or Enum.AutomaticSize.None,
                         AnchorPoint = theme.frame.anchorPoint,
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
@@ -3352,6 +3390,8 @@ function redwine.new(redwineSettings)
                         Parent = card.content
                     }
                 )
+
+                cp.frame:SetAttribute("colorpicker_variant", variant)
 
                 -- label
                 cp.label =
@@ -3878,12 +3918,15 @@ function redwine.new(redwineSettings)
                 s.frame = helpers.createInstance("Frame", {
                     Name = (s.settings.name or "slider") .. "_frame",
                     Size = theme.frame.size,
+                    AutomaticSize = theme.frame.automaticSize or Enum.AutomaticSize.None,
                     AnchorPoint = theme.frame.anchorPoint,
                     BackgroundColor3 = Color3.fromRGB(255,255,255),
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
                     Parent = card.content,
                 })
+
+                s.frame:SetAttribute("slider_variant", variant)
 
                 -- label
                 s.label = helpers.createInstance("TextLabel", {
