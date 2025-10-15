@@ -1,27 +1,27 @@
 local styles = {}
 
 styles.default = {
-    main_frame = {
-        background = Color3.fromRGB(75, 0, 0),
-        backgroundtransparency = 0.05,
-        cornerRadius = 2,
-        stroke = {
-            color = Color3.fromRGB(0, 0, 0),
+    tabcontainer = {
+        background = Color3.fromRGB(255, 255, 255),
+        backgroundtransparency = 1,
+        anchorPoint = Vector2.new(0.5, 0),
+        size = UDim2.new(1, -40, 1, -75),
+        position = UDim2.new(0.5, 0, 0, 65),
             thickness = 2,
             strokeMode = Enum.ApplyStrokeMode.Border,
             lineJoinMode = Enum.LineJoinMode.Round
         },
         gradient = {
             ColorSequence = ColorSequence.new(
-                {
+                    size = UDim2.new(1, 0, 0, 30),
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(75, 75, 75)),
                     ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150, 150, 150)),
                     ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 150, 150)),
                     ColorSequenceKeypoint.new(1.0, Color3.fromRGB(75, 75, 75))
                 }
-            ),
+        size = UDim2.new(0.5, -12, 0, 100),
             Rotation = 90
-        },
+                size = UDim2.new(1, -20, 0, 25),
         anchorPoint = Vector2.new(0.5, 0.5),
         size = UDim2.new(0, 500, 0, 500)
     },
@@ -30,7 +30,7 @@ styles.default = {
         backgroundtransparency = 0.05,
         cornerRadius = 2,
         gradient = {
-            ColorSequence = ColorSequence.new(
+                left = UDim.new(0, 6),
                 {
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
                     ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 150, 150))
@@ -40,19 +40,19 @@ styles.default = {
         },
         anchorPoint = Vector2.new(0.5, 0),
         size = UDim2.new(1, 0, 0, 35),
-        position = UDim2.new(0.5, 0, 0, 0)
+                right = UDim.new(0, 6),
     },
     windowtitle = {
         textColor = Color3.fromRGB(255, 255, 255),
         textSize = 16,
         textFont = Enum.Font.RobotoMono,
         textalignment = Enum.TextXAlignment.Left,
-        gradient = {
+                    size = UDim2.new(1, -20, 0, 30),
             ColorSequence = ColorSequence.new(
-                {
+        size = UDim2.new(1, -12, 0, 50),
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
                     ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
-                }
+                    size = UDim2.new(1, 0, 0, 60),
             ),
             Rotation = 0
         },
@@ -60,7 +60,7 @@ styles.default = {
             bottom = UDim.new(0, 0),
             left = UDim.new(0, 15),
             right = UDim.new(0, 0),
-            top = UDim.new(0, 0)
+                size = UDim2.new(1, -20, 0, 25),
         },
         anchorPoint = Vector2.new(0, 0.5),
         size = UDim2.new(1, 0, 0, 35),
@@ -157,8 +157,8 @@ styles.default = {
         background = Color3.fromRGB(255, 255, 255),
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
-        size = UDim2.new(0, 500, 0, 435),
-        position = UDim2.new(0.5, 0, 0.13, 0),
+        size = UDim2.new(1, -40, 1, -75),
+        position = UDim2.new(0.5, 0, 0, 65),
         padding = {
             bottom = UDim.new(0, 0),
             left = UDim.new(0, 0),
@@ -171,7 +171,7 @@ styles.default = {
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
         automaticSize = Enum.AutomaticSize.Y,
-        size = UDim2.new(0, 250, 0, 100),
+        size = UDim2.new(0.5, -12, 0, 100),
         listlayout = {
             padding = UDim.new(0, 8),
             fillDirection = Enum.FillDirection.Vertical,
@@ -182,9 +182,9 @@ styles.default = {
             position = UDim2.new(0.25, 0, 0, 0),
             padding = {
                 bottom = UDim.new(0, 0),
-                left = UDim.new(0, 2),
+                left = UDim.new(0, 6),
                 right = UDim.new(0, 0),
-                top = UDim.new(0, 0)
+                        size = UDim2.new(1, -20, 0, 30),
             }
         },
         right = {
@@ -192,19 +192,19 @@ styles.default = {
             padding = {
                 bottom = UDim.new(0, 0),
                 left = UDim.new(0, 0),
-                right = UDim.new(0, 2),
+                right = UDim.new(0, 6),
                 top = UDim.new(0, 0)
             }
-        }
+                        size = UDim2.new(1, 0, 0, 60),
     },
     card = {
         background = Color3.fromRGB(50, 0, 0),
         backgroundtransparency = 0.5,
         anchorPoint = Vector2.new(0.5, 0.5),
-        size = UDim2.new(0, 240, 0, 50),
+        size = UDim2.new(1, -12, 0, 50),
         automaticSize = Enum.AutomaticSize.Y,
         gradient = {
-            ColorSequence = ColorSequence.new(
+                    size = UDim2.new(1, -20, 0, 25),
                 {
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(75, 75, 75)),
                     ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150, 150, 150)),
@@ -222,7 +222,7 @@ styles.default = {
         },
         listlayout = {
             padding = UDim.new(0, 4),
-            fillDirection = Enum.FillDirection.Vertical,
+                        size = UDim2.new(1, 0, 0, 30),
             horizontalAlignment = Enum.HorizontalAlignment.Center,
             verticalAlignment = Enum.VerticalAlignment.Top
         }
@@ -232,9 +232,9 @@ styles.default = {
         textSize = 14,
         textFont = Enum.Font.RobotoMono,
         textalignment = Enum.TextXAlignment.Left,
-        gradient = {
-            ColorSequence = ColorSequence.new(
-                {
+                        size = UDim2.new(1, -130, 0, 30),
+                        position = UDim2.new(0, 0, 0.5, 0),
+                        anchorPoint = Vector2.new(0, 0.5),
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
                     ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
                 }
@@ -245,8 +245,8 @@ styles.default = {
             bottom = UDim.new(0, 10),
             left = UDim.new(0, 10),
             right = UDim.new(0, 10),
-            top = UDim.new(0, 10)
-        },
+                    anchorPoint = Vector2.new(1, 0.5),
+                    position = UDim2.new(1, -10, 0.5, 0),
         anchorPoint = Vector2.new(0, 0.5),
         size = UDim2.new(1, 0, 0, 25),
         position = UDim2.new(0, 0, 0.5, 0)
@@ -271,7 +271,7 @@ styles.default = {
     richTextLabel = {
         textColor = Color3.fromRGB(255, 255, 255),
         textSize = 14,
-        textFont = Enum.Font.RobotoMono,
+                        size = UDim2.new(1, 0, 0, 30),
         textalignment = Enum.TextXAlignment.Left,
         richText = true,
         automaticSize = Enum.AutomaticSize.Y,
@@ -280,14 +280,14 @@ styles.default = {
             left = UDim.new(0, 10),
             right = UDim.new(0, 10),
             top = UDim.new(0, 0)
-        },
+                    size = UDim2.new(1, -20, 0, 25),
         size = UDim2.new(1, 0, 0, 30),
         anchorPoint = Vector2.new(0.5, 0.5)
     },
     button = {
         singlewide = {
             frame = {
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, 0, 0, 30),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(25, 0, 0),
@@ -295,7 +295,7 @@ styles.default = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.5, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(255, 255, 255),
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
@@ -321,12 +321,12 @@ styles.default = {
                     right = UDim.new(0, 10),
                     top = UDim.new(0, 0)
                 },
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, -20, 0, 30),
                 position = UDim2.new(0.5, 0, 0.25, 0),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             frame = {
-                size = UDim2.new(0, 240, 0, 60),
+                size = UDim2.new(1, 0, 0, 60),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(25, 0, 0),
@@ -334,7 +334,7 @@ styles.default = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.75, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(255, 255, 255),
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
@@ -351,7 +351,7 @@ styles.default = {
     toggle = {
         frame = {
             -- Container frame
-            size = UDim2.new(0, 240, 0, 30),
+            size = UDim2.new(1, 0, 0, 30),
             anchorPoint = Vector2.new(0.5, 0.5),
             background = Color3.fromRGB(255, 255, 255),
             backgroundTransparency = 1
@@ -364,9 +364,9 @@ styles.default = {
             textalignment = Enum.TextXAlignment.Left,
             richText = true,
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 201, 0, 30),
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.42977, 0, 0.5, 0),
+            size = UDim2.new(1, -60, 0, 30),
+            anchorPoint = Vector2.new(0, 0.5),
+            position = UDim2.new(0, 0, 0.5, 0),
             padding = {
                 left = UDim.new(0, 10),
                 right = UDim.new(0, 0),
@@ -378,8 +378,8 @@ styles.default = {
             -- Right-side ImageButton (the checkbox)
             background = Color3.fromRGB(26, 0, 0),
             backgroundTransparency = 0.75,
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.90121, 0, 0.5, 0),
+            anchorPoint = Vector2.new(1, 0.5),
+            position = UDim2.new(1, -10, 0.5, 0),
             size = UDim2.new(0, 25, 0, 25),
             image = "rbxassetid://11604833061",
             cornerRadius = 2,
@@ -1195,8 +1195,8 @@ styles.dark = {
         background = Color3.fromRGB(255, 255, 255),
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
-        size = UDim2.new(0, 500, 0, 435),
-        position = UDim2.new(0.5, 0, 0.13, 0),
+        size = UDim2.new(1, -40, 1, -75),
+        position = UDim2.new(0.5, 0, 0, 65),
         padding = {
             bottom = UDim.new(0, 0),
             left = UDim.new(0, 0),
@@ -1209,7 +1209,7 @@ styles.dark = {
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
         automaticSize = Enum.AutomaticSize.Y,
-        size = UDim2.new(0, 250, 0, 100),
+        size = UDim2.new(0.5, -12, 0, 100),
         listlayout = {
             padding = UDim.new(0, 8),
             fillDirection = Enum.FillDirection.Vertical,
@@ -1220,7 +1220,7 @@ styles.dark = {
             position = UDim2.new(0.25, 0, 0, 0),
             padding = {
                 bottom = UDim.new(0, 0),
-                left = UDim.new(0, 2),
+                left = UDim.new(0, 6),
                 right = UDim.new(0, 0),
                 top = UDim.new(0, 0)
             }
@@ -1230,7 +1230,7 @@ styles.dark = {
             padding = {
                 bottom = UDim.new(0, 0),
                 left = UDim.new(0, 0),
-                right = UDim.new(0, 2),
+                right = UDim.new(0, 6),
                 top = UDim.new(0, 0)
             }
         }
@@ -1239,7 +1239,7 @@ styles.dark = {
         background = Color3.fromRGB(50, 50, 50),
         backgroundtransparency = 0.5,
         anchorPoint = Vector2.new(0.5, 0.5),
-        size = UDim2.new(0, 240, 0, 50),
+        size = UDim2.new(1, -12, 0, 50),
         automaticSize = Enum.AutomaticSize.Y,
         gradient = {
             ColorSequence = ColorSequence.new(
@@ -1325,7 +1325,7 @@ styles.dark = {
     button = {
         singlewide = {
             frame = {
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, 0, 0, 30),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(25, 25, 25),
@@ -1333,7 +1333,7 @@ styles.dark = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.5, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(255, 255, 255),
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
@@ -1359,12 +1359,12 @@ styles.dark = {
                     right = UDim.new(0, 10),
                     top = UDim.new(0, 0)
                 },
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, -20, 0, 30),
                 position = UDim2.new(0.5, 0, 0.25, 0),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             frame = {
-                size = UDim2.new(0, 240, 0, 60),
+                size = UDim2.new(1, 0, 0, 60),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(25, 25, 25),
@@ -1372,7 +1372,7 @@ styles.dark = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.75, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(255, 255, 255),
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
@@ -1388,7 +1388,7 @@ styles.dark = {
     },
     toggle = {
         frame = {
-            size = UDim2.new(0, 240, 0, 30),
+            size = UDim2.new(1, 0, 0, 30),
             anchorPoint = Vector2.new(0.5, 0.5),
             background = Color3.fromRGB(255, 255, 255),
             backgroundTransparency = 1
@@ -1400,9 +1400,9 @@ styles.dark = {
             textalignment = Enum.TextXAlignment.Left,
             richText = true,
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 201, 0, 30),
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.42977, 0, 0.5, 0),
+            size = UDim2.new(1, -60, 0, 30),
+            anchorPoint = Vector2.new(0, 0.5),
+            position = UDim2.new(0, 0, 0.5, 0),
             padding = {
                 left = UDim.new(0, 10),
                 right = UDim.new(0, 0),
@@ -1413,8 +1413,8 @@ styles.dark = {
         button = {
             background = Color3.fromRGB(26, 26, 26),
             backgroundTransparency = 0.75,
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.90121, 0, 0.5, 0),
+            anchorPoint = Vector2.new(1, 0.5),
+            position = UDim2.new(1, -10, 0.5, 0),
             size = UDim2.new(0, 25, 0, 25),
             image = "rbxassetid://11604833061",
             cornerRadius = 2,
@@ -1435,7 +1435,7 @@ styles.dark = {
                 textalignment = Enum.TextXAlignment.Left,
                 richText = true,
                 automaticSize = Enum.AutomaticSize.Y,
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, -20, 0, 30),
                 position = UDim2.new(0.5, 0, 0.25, 0),
                 anchorPoint = Vector2.new(0.5, 0.5),
                 padding = {
@@ -1446,7 +1446,7 @@ styles.dark = {
                 }
             },
             frame = {
-                size = UDim2.new(0, 240, 0, 60),
+                size = UDim2.new(1, 0, 0, 60),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(26, 26, 26),
@@ -1454,7 +1454,7 @@ styles.dark = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.75, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(255, 255, 255),
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
@@ -1471,7 +1471,7 @@ styles.dark = {
         },
         inline = {
             frame = {
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, 0, 0, 30),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             richTextLabel = {
@@ -1481,9 +1481,9 @@ styles.dark = {
                 textalignment = Enum.TextXAlignment.Left,
                 richText = true,
                 automaticSize = Enum.AutomaticSize.Y,
-                size = UDim2.new(0, 115, 0, 30),
-                position = UDim2.new(0.25, 0, 0.5, 0),
-                anchorPoint = Vector2.new(0.5, 0.5),
+                size = UDim2.new(1, -130, 0, 30),
+                position = UDim2.new(0, 0, 0.5, 0),
+                anchorPoint = Vector2.new(0, 0.5),
                 padding = {
                     left = UDim.new(0, 10),
                     right = UDim.new(0, 0),
@@ -1493,8 +1493,8 @@ styles.dark = {
             },
             background = Color3.fromRGB(26, 26, 26),
             backgroundTransparency = 0.75,
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.72413, 0, 0.5, 0),
+            anchorPoint = Vector2.new(1, 0.5),
+            position = UDim2.new(1, -10, 0.5, 0),
             size = UDim2.new(0, 110, 0, 25),
             textColor = Color3.fromRGB(255, 255, 255),
             swatch = {
@@ -1518,7 +1518,7 @@ styles.dark = {
         },
         singlewide = {
             frame = {
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, 0, 0, 30),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(26, 26, 26),
@@ -1526,7 +1526,7 @@ styles.dark = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.5, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(255, 255, 255),
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
@@ -2214,8 +2214,8 @@ styles.light = {
         background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
-        size = UDim2.new(0, 500, 0, 435),
-        position = UDim2.new(0.5, 0, 0.13, 0),
+        size = UDim2.new(1, -40, 1, -75),
+        position = UDim2.new(0.5, 0, 0, 65),
         padding = {
             bottom = UDim.new(0, 0),
             left = UDim.new(0, 0),
@@ -2228,7 +2228,7 @@ styles.light = {
         backgroundtransparency = 1,
         anchorPoint = Vector2.new(0.5, 0),
         automaticSize = Enum.AutomaticSize.Y,
-        size = UDim2.new(0, 250, 0, 100),
+        size = UDim2.new(0.5, -12, 0, 100),
         listlayout = {
             padding = UDim.new(0, 8),
             fillDirection = Enum.FillDirection.Vertical,
@@ -2239,7 +2239,7 @@ styles.light = {
             position = UDim2.new(0.25, 0, 0, 0),
             padding = {
                 bottom = UDim.new(0, 0),
-                left = UDim.new(0, 2),
+                left = UDim.new(0, 6),
                 right = UDim.new(0, 0),
                 top = UDim.new(0, 0)
             }
@@ -2249,7 +2249,7 @@ styles.light = {
             padding = {
                 bottom = UDim.new(0, 0),
                 left = UDim.new(0, 0),
-                right = UDim.new(0, 2),
+                right = UDim.new(0, 6),
                 top = UDim.new(0, 0)
             }
         }
@@ -2258,7 +2258,7 @@ styles.light = {
         background = Color3.fromRGB(50, 50, 50),
         backgroundtransparency = 0.5,
         anchorPoint = Vector2.new(0.5, 0.5),
-        size = UDim2.new(0, 240, 0, 50),
+        size = UDim2.new(1, -12, 0, 50),
         automaticSize = Enum.AutomaticSize.Y,
         gradient = {
             ColorSequence = ColorSequence.new(
@@ -2407,7 +2407,7 @@ styles.light = {
     },
     toggle = {
         frame = {
-            size = UDim2.new(0, 240, 0, 30),
+            size = UDim2.new(1, 0, 0, 30),
             anchorPoint = Vector2.new(0.5, 0.5),
             background = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             backgroundTransparency = 1
@@ -2419,9 +2419,9 @@ styles.light = {
             textalignment = Enum.TextXAlignment.Left,
             richText = true,
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 201, 0, 30),
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.42977, 0, 0.5, 0),
+            size = UDim2.new(1, -60, 0, 30),
+            anchorPoint = Vector2.new(0, 0.5),
+            position = UDim2.new(0, 0, 0.5, 0),
             padding = {
                 left = UDim.new(0, 10),
                 right = UDim.new(0, 0),
@@ -2432,8 +2432,8 @@ styles.light = {
         button = {
             background = Color3.fromRGB(26, 26, 26),
             backgroundTransparency = 0.75,
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.90121, 0, 0.5, 0),
+            anchorPoint = Vector2.new(1, 0.5),
+            position = UDim2.new(1, -10, 0.5, 0),
             size = UDim2.new(0, 25, 0, 25),
             image = "rbxassetid://11604833061",
             cornerRadius = 2,
@@ -2454,7 +2454,7 @@ styles.light = {
                 textalignment = Enum.TextXAlignment.Left,
                 richText = true,
                 automaticSize = Enum.AutomaticSize.Y,
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, -20, 0, 30),
                 position = UDim2.new(0.5, 0, 0.25, 0),
                 anchorPoint = Vector2.new(0.5, 0.5),
                 padding = {
@@ -2465,7 +2465,7 @@ styles.light = {
                 }
             },
             frame = {
-                size = UDim2.new(0, 240, 0, 60),
+                size = UDim2.new(1, 0, 0, 60),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(26, 26, 26),
@@ -2473,7 +2473,7 @@ styles.light = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.75, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
@@ -2490,7 +2490,7 @@ styles.light = {
         },
         inline = {
             frame = {
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, 0, 0, 30),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             richTextLabel = {
@@ -2500,9 +2500,9 @@ styles.light = {
                 textalignment = Enum.TextXAlignment.Left,
                 richText = true,
                 automaticSize = Enum.AutomaticSize.Y,
-                size = UDim2.new(0, 115, 0, 30),
-                position = UDim2.new(0.25, 0, 0.5, 0),
-                anchorPoint = Vector2.new(0.5, 0.5),
+                size = UDim2.new(1, -130, 0, 30),
+                position = UDim2.new(0, 0, 0.5, 0),
+                anchorPoint = Vector2.new(0, 0.5),
                 padding = {
                     left = UDim.new(0, 10),
                     right = UDim.new(0, 0),
@@ -2512,8 +2512,8 @@ styles.light = {
             },
             background = Color3.fromRGB(26, 26, 26),
             backgroundTransparency = 0.75,
-            anchorPoint = Vector2.new(0.5, 0.5),
-            position = UDim2.new(0.72413, 0, 0.5, 0),
+            anchorPoint = Vector2.new(1, 0.5),
+            position = UDim2.new(1, -10, 0.5, 0),
             size = UDim2.new(0, 110, 0, 25),
             textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             swatch = {
@@ -2537,7 +2537,7 @@ styles.light = {
         },
         singlewide = {
             frame = {
-                size = UDim2.new(0, 240, 0, 30),
+                size = UDim2.new(1, 0, 0, 30),
                 anchorPoint = Vector2.new(0.5, 0.5)
             },
             background = Color3.fromRGB(26, 26, 26),
@@ -2545,7 +2545,7 @@ styles.light = {
             anchorPoint = Vector2.new(0.5, 0.5),
             position = UDim2.new(0.5, 0, 0.5, 0),
             automaticSize = Enum.AutomaticSize.Y,
-            size = UDim2.new(0, 220, 0, 25),
+            size = UDim2.new(1, -20, 0, 25),
             textColor = Color3.fromRGB(0, 0, 0), -- was 255,255,255
             textSize = 14,
             textFont = Enum.Font.RobotoMono,
