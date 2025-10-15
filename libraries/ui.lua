@@ -1,6 +1,7 @@
 -- redwine UI library by vmxpose
 local helpers = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/helpers.lua"))()
 local styles = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/styles.lua"))()
+
 -- Centralized ZIndex hierarchy
 local Z = {
     REST = 1,        -- background, chrome
@@ -10,20 +11,12 @@ local Z = {
     POPOUT = 50,     -- dropdown lists, colorpicker panels
 }
 
-local function resolvePopoutDimensions(baseHeight, position, size)
-    baseHeight = baseHeight or 0
-    local posScale = position and position.Y and position.Y.Scale or 0
-    local posOffset = position and position.Y and position.Y.Offset or 0
-    local sizeScale = size and size.Y and size.Y.Scale or 0
-    local sizeOffset = size and size.Y and size.Y.Offset or 0
-    local topOffset = posScale * baseHeight + posOffset
-    local contentHeight = sizeScale * baseHeight + sizeOffset
-    return topOffset, contentHeight
-end
-
 local redwine = {}
 
 redwine.flags = {}
+
+redwine.helpers = assert(helpers, "[redwine] helpers library failed to load")
+redwine.styles = assert(styles, "[redwine] styles library failed to load")
 
 function redwine.new(redwineSettings)
     local window = {}
@@ -940,30 +933,7 @@ function redwine.new(redwineSettings)
                             end
                         end
                     end
-
                 end
-
-                local baseHeight = dtheme.frame.size.Y.Offset
-                if baseHeight == 0 then
-                    baseHeight = container:GetAttribute("PopoutBaseHeight") or container.AbsoluteSize.Y
-                end
-                local popoutTop, popoutHeight = resolvePopoutDimensions(baseHeight, dtheme.items.position, dtheme.items.size)
-                container.AutomaticSize = Enum.AutomaticSize.None
-                container:SetAttribute("PopoutBaseHeight", baseHeight)
-                container:SetAttribute("PopoutTopOffset", popoutTop)
-                container:SetAttribute("PopoutContentHeight", popoutHeight)
-                local isExpanded = container:GetAttribute("PopoutIsExpanded") or false
-                local items = container:FindFirstChild("items")
-                if items and items.ClassName == "ScrollingFrame" then
-                    items.Position = UDim2.new(dtheme.items.position.X.Scale, dtheme.items.position.X.Offset, 0, popoutTop)
-                    isExpanded = items.Visible
-                end
-                container:SetAttribute("PopoutIsExpanded", isExpanded and true or false)
-                local targetHeight = baseHeight
-                if isExpanded then
-                    targetHeight = math.max(targetHeight, popoutTop + popoutHeight)
-                end
-                container.Size = UDim2.new(dtheme.frame.size.X.Scale, dtheme.frame.size.X.Offset, 0, targetHeight)
 
                 local function updateColorpicker(container)
                     if not container or container.ClassName ~= "Frame" then return end
@@ -1048,27 +1018,6 @@ function redwine.new(redwineSettings)
                     if hueMarker and hueMarker.ClassName == "Frame" then
                         tween(hueMarker, { Size = ctheme.markers.hue.size })
                     end
-
-                    local baseHeight = ctheme.frame.size.Y.Offset
-                    if baseHeight == 0 then
-                        baseHeight = container:GetAttribute("PopoutBaseHeight") or container.AbsoluteSize.Y
-                    end
-                    local popoutTop, popoutHeight = resolvePopoutDimensions(baseHeight, ctheme.panel.position, ctheme.panel.size)
-                    container.AutomaticSize = Enum.AutomaticSize.None
-                    container:SetAttribute("PopoutBaseHeight", baseHeight)
-                    container:SetAttribute("PopoutTopOffset", popoutTop)
-                    container:SetAttribute("PopoutContentHeight", popoutHeight)
-                    local isExpanded = container:GetAttribute("PopoutIsExpanded") or false
-                    if panel and panel.ClassName == "Frame" then
-                        panel.Position = UDim2.new(ctheme.panel.position.X.Scale, ctheme.panel.position.X.Offset, 0, popoutTop)
-                        isExpanded = panel.Visible
-                    end
-                    container:SetAttribute("PopoutIsExpanded", isExpanded and true or false)
-                    local targetHeight = baseHeight
-                    if isExpanded then
-                        targetHeight = math.max(targetHeight, popoutTop + popoutHeight)
-                    end
-                    container.Size = UDim2.new(ctheme.frame.size.X.Scale, ctheme.frame.size.X.Offset, 0, targetHeight)
                 end
 
                 local function updateSlider(container)
@@ -3151,38 +3100,6 @@ function redwine.new(redwineSettings)
                     }
                 )
 
-                dd.frame.AutomaticSize = Enum.AutomaticSize.None
-                dd.frame.ClipsDescendants = false
-                local baseHeight = theme.frame.size.Y.Offset
-                if baseHeight == 0 then
-                    baseHeight = dd.frame.AbsoluteSize.Y
-                end
-                local popoutTop, popoutHeight = resolvePopoutDimensions(baseHeight, theme.items.position, theme.items.size)
-                dd.items.Position = UDim2.new(theme.items.position.X.Scale, theme.items.position.X.Offset, 0, popoutTop)
-                dd.frame:SetAttribute("PopoutBaseHeight", baseHeight)
-                dd.frame:SetAttribute("PopoutTopOffset", popoutTop)
-                dd.frame:SetAttribute("PopoutContentHeight", popoutHeight)
-                dd.frame:SetAttribute("PopoutIsExpanded", false)
-
-                local function refreshDropdownHeight()
-                    local activeTheme = (window.theme.dropdown and window.theme.dropdown[variant]) or theme
-                    local baseAttr = dd.frame:GetAttribute("PopoutBaseHeight") or activeTheme.frame.size.Y.Offset or baseHeight
-                    local topAttr = dd.frame:GetAttribute("PopoutTopOffset") or popoutTop
-                    local heightAttr = dd.frame:GetAttribute("PopoutContentHeight") or popoutHeight
-                    local expanded = dd.items.Visible
-                    dd.frame:SetAttribute("PopoutIsExpanded", expanded)
-                    local targetHeight = baseAttr
-                    if expanded then
-                        targetHeight = math.max(targetHeight, topAttr + heightAttr)
-                    end
-                    dd.frame.Size = UDim2.new(activeTheme.frame.size.X.Scale, activeTheme.frame.size.X.Offset, 0, targetHeight)
-                end
-
-                refreshDropdownHeight()
-
-                dd._popoutConn =
-                    dd.items:GetPropertyChangedSignal("Visible"):Connect(refreshDropdownHeight)
-
                 -- populate items
                 local function toggleValue(val)
                     if dd.settings.multi then
@@ -3202,7 +3119,6 @@ function redwine.new(redwineSettings)
                     else
                         dd.selected = {val}
                         dd.items.Visible = false
-                        refreshDropdownHeight()
                     end
                     dd.button.Text = formatButtonText()
                     if dd.settings.onChanged then
@@ -3310,7 +3226,6 @@ function redwine.new(redwineSettings)
                 dd.button.MouseButton1Click:Connect(
                     function()
                         dd.items.Visible = not dd.items.Visible
-                        refreshDropdownHeight()
                     end
                 )
 
@@ -3363,9 +3278,6 @@ function redwine.new(redwineSettings)
                 function dd:destroy()
                     if self._outsideConn then
                         self._outsideConn:Disconnect()
-                    end
-                    if self._popoutConn then
-                        self._popoutConn:Disconnect()
                     end
                     if self.frame then
                         self.frame:Destroy()
@@ -3628,37 +3540,6 @@ function redwine.new(redwineSettings)
                     theme.panel.stroke.lineJoinMode
                 )
 
-                cp.frame.AutomaticSize = Enum.AutomaticSize.None
-                cp.frame.ClipsDescendants = false
-                local baseHeight = theme.frame.size.Y.Offset
-                if baseHeight == 0 then
-                    baseHeight = cp.frame.AbsoluteSize.Y
-                end
-                local panelTop, panelHeight = resolvePopoutDimensions(baseHeight, theme.panel.position, theme.panel.size)
-                cp.panel.Position = UDim2.new(theme.panel.position.X.Scale, theme.panel.position.X.Offset, 0, panelTop)
-                cp.frame:SetAttribute("PopoutBaseHeight", baseHeight)
-                cp.frame:SetAttribute("PopoutTopOffset", panelTop)
-                cp.frame:SetAttribute("PopoutContentHeight", panelHeight)
-                cp.frame:SetAttribute("PopoutIsExpanded", false)
-
-                local function refreshColorpickerHeight()
-                    local activeTheme = (window.theme.colorpicker and window.theme.colorpicker[variant]) or theme
-                    local baseAttr = cp.frame:GetAttribute("PopoutBaseHeight") or activeTheme.frame.size.Y.Offset or baseHeight
-                    local topAttr = cp.frame:GetAttribute("PopoutTopOffset") or panelTop
-                    local heightAttr = cp.frame:GetAttribute("PopoutContentHeight") or panelHeight
-                    local expanded = cp.panel.Visible
-                    cp.frame:SetAttribute("PopoutIsExpanded", expanded)
-                    local targetHeight = baseAttr
-                    if expanded then
-                        targetHeight = math.max(targetHeight, topAttr + heightAttr)
-                    end
-                    cp.frame.Size = UDim2.new(activeTheme.frame.size.X.Scale, activeTheme.frame.size.X.Offset, 0, targetHeight)
-                end
-
-                refreshColorpickerHeight()
-
-                cp._popoutConn = cp.panel:GetPropertyChangedSignal("Visible"):Connect(refreshColorpickerHeight)
-
                 -- SV square: base = hue color, plus white and black gradients
                 cp.sv =
                     helpers.createInstance(
@@ -3906,7 +3787,6 @@ function redwine.new(redwineSettings)
                 cp.button.MouseButton1Click:Connect(
                     function()
                         cp.panel.Visible = not cp.panel.Visible
-                        refreshColorpickerHeight()
                     end
                 )
 
@@ -3933,7 +3813,6 @@ function redwine.new(redwineSettings)
                             local x, y = pos.X, pos.Y
                             if not pointInFrame(cp.button, x, y) and not pointInFrame(cp.panel, x, y) then
                                 cp.panel.Visible = false
-                                refreshColorpickerHeight()
                             end
                         end
                     )
@@ -3956,9 +3835,6 @@ function redwine.new(redwineSettings)
                     end
                     if self._moveConn then
                         self._moveConn:Disconnect()
-                    end
-                    if self._popoutConn then
-                        self._popoutConn:Disconnect()
                     end
                     if self.frame then
                         self.frame:Destroy()
