@@ -1,6 +1,1044 @@
 -- redwine UI library by vmxpose
 local helpers = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/helpers.lua"))()
-local styles = loadstring(game:HttpGet("https://raw.githubusercontent.com/vmxpose/redwine/refs/heads/main/libraries/styles.lua"))()
+local styles = {}
+
+styles.default = {
+    main_frame = {
+        background = Color3.fromRGB(75, 0, 0),
+        backgroundtransparency = 0.05,
+        cornerRadius = 2,
+        stroke = {
+            color = Color3.fromRGB(0, 0, 0),
+            thickness = 2,
+            strokeMode = Enum.ApplyStrokeMode.Border,
+            lineJoinMode = Enum.LineJoinMode.Round
+        },
+        gradient = {
+            ColorSequence = ColorSequence.new(
+                {
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(75, 75, 75)),
+                    ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(75, 75, 75))
+                }
+            ),
+            Rotation = 90
+        },
+        anchorPoint = Vector2.new(0.5, 0.5),
+        size = UDim2.new(0, 500, 0, 500)
+    },
+    topbar = {
+        background = Color3.fromRGB(75, 0, 0),
+        backgroundtransparency = 0.05,
+        cornerRadius = 2,
+        gradient = {
+            ColorSequence = ColorSequence.new(
+                {
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 150, 150))
+                }
+            ),
+            Rotation = 90
+        },
+        anchorPoint = Vector2.new(0.5, 0),
+        size = UDim2.new(1, 0, 0, 35),
+        position = UDim2.new(0.5, 0, 0, 0)
+    },
+    windowtitle = {
+        textColor = Color3.fromRGB(255, 255, 255),
+        textSize = 16,
+        textFont = Enum.Font.RobotoMono,
+        textalignment = Enum.TextXAlignment.Left,
+        gradient = {
+            ColorSequence = ColorSequence.new(
+                {
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                }
+            ),
+            Rotation = 0
+        },
+        padding = {
+            bottom = UDim.new(0, 0),
+            left = UDim.new(0, 15),
+            right = UDim.new(0, 0),
+            top = UDim.new(0, 0)
+        },
+        anchorPoint = Vector2.new(0, 0.5),
+        size = UDim2.new(1, 0, 0, 35),
+        position = UDim2.new(0, 0, 0.5, 0)
+    },
+    tab_buttons = {
+        background = Color3.fromRGB(255, 255, 255),
+        backgroundtransparency = 1,
+        anchorPoint = Vector2.new(0.5, 0),
+        size = UDim2.new(1, 0, 0, 30),
+        position = UDim2.new(0.5, 0, 0.07, 0),
+        listlayout = {
+            padding = UDim.new(0, 10),
+            fillDirection = Enum.FillDirection.Horizontal,
+            horizontalAlignment = Enum.HorizontalAlignment.Left,
+            verticalAlignment = Enum.VerticalAlignment.Center
+        }
+    },
+    tab_button = {
+        anchorPoint = Vector2.new(0.5, 0.5),
+        size = UDim2.new(0, 75, 0, 30),
+        textFont = Enum.Font.RobotoMono,
+        textSize = 14,
+        textXAlignment = Enum.TextXAlignment.Center,
+        textYAlignment = Enum.TextYAlignment.Center,
+        off = {
+            textColor = Color3.fromRGB(150, 150, 150),
+            gradient = {
+                ColorSequence = ColorSequence.new(
+                    {
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
+                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                    }
+                ),
+                Rotation = 45
+            },
+            padding = {
+                bottom = UDim.new(0, 0),
+                left = UDim.new(0, 10),
+                right = UDim.new(0, 10),
+                top = UDim.new(0, 0)
+            }
+        },
+        on = {
+            textColor = Color3.fromRGB(255, 255, 255),
+            gradient = {
+                ColorSequence = ColorSequence.new(
+                    {
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 150, 150))
+                    }
+                ),
+                Rotation = 90
+            }
+        },
+        hover = {
+            textColor = Color3.fromRGB(255, 255, 255),
+            gradient = {
+                ColorSequence = ColorSequence.new(
+                    {
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 200, 200)),
+                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                    }
+                ),
+                Rotation = 90
+            },
+            padding = {
+                bottom = UDim.new(0, 5),
+                left = UDim.new(0, 10),
+                right = UDim.new(0, 10),
+                top = UDim.new(0, 0)
+            }
+        }
+    },
+    indicator = {
+        background = Color3.fromRGB(150, 0, 0),
+        anchorPoint = Vector2.new(0.5, 0.5),
+        size = UDim2.new(1, 0, 0, 2),
+        position = UDim2.new(0.5, 0, 1, 0),
+        automaticSize = Enum.AutomaticSize.X,
+        gradient = {
+            ColorSequence = ColorSequence.new(
+                {
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(75, 75, 75)),
+                    ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(75, 75, 75))
+                }
+            ),
+            Rotation = 0
+        }
+    },
+    tabcontainer = {
+        background = Color3.fromRGB(255, 255, 255),
+        backgroundtransparency = 1,
+        anchorPoint = Vector2.new(0.5, 0),
+        size = UDim2.new(0, 500, 0, 435),
+        position = UDim2.new(0.5, 0, 0.13, 0),
+        padding = {
+            bottom = UDim.new(0, 0),
+            left = UDim.new(0, 0),
+            right = UDim.new(0, 0),
+            top = UDim.new(0, 10)
+        }
+    },
+    tabsection = {
+        background = Color3.fromRGB(255, 255, 255),
+        backgroundtransparency = 1,
+        anchorPoint = Vector2.new(0.5, 0),
+        automaticSize = Enum.AutomaticSize.Y,
+        size = UDim2.new(0, 250, 0, 100),
+        listlayout = {
+            padding = UDim.new(0, 8),
+            fillDirection = Enum.FillDirection.Vertical,
+            horizontalAlignment = Enum.HorizontalAlignment.Center,
+            verticalAlignment = Enum.VerticalAlignment.Top
+        },
+        left = {
+            position = UDim2.new(0.25, 0, 0, 0),
+            padding = {
+                bottom = UDim.new(0, 0),
+                left = UDim.new(0, 2),
+                right = UDim.new(0, 0),
+                top = UDim.new(0, 0)
+            }
+        },
+        right = {
+            position = UDim2.new(0.75, 0, 0, 0),
+            padding = {
+                bottom = UDim.new(0, 0),
+                left = UDim.new(0, 0),
+                right = UDim.new(0, 2),
+                top = UDim.new(0, 0)
+            }
+        }
+    },
+    card = {
+        background = Color3.fromRGB(50, 0, 0),
+        backgroundtransparency = 0.5,
+        anchorPoint = Vector2.new(0.5, 0.5),
+        size = UDim2.new(0, 240, 0, 50),
+        automaticSize = Enum.AutomaticSize.Y,
+        gradient = {
+            ColorSequence = ColorSequence.new(
+                {
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(75, 75, 75)),
+                    ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(75, 75, 75))
+                }
+            ),
+            Rotation = 90
+        },
+        stroke = {
+            color = Color3.fromRGB(25, 0, 0),
+            thickness = 2,
+            strokeMode = Enum.ApplyStrokeMode.Contextual,
+            lineJoinMode = Enum.LineJoinMode.Round
+        },
+        listlayout = {
+            padding = UDim.new(0, 4),
+            fillDirection = Enum.FillDirection.Vertical,
+            horizontalAlignment = Enum.HorizontalAlignment.Center,
+            verticalAlignment = Enum.VerticalAlignment.Top
+        }
+    },
+    cardtitle = {
+        textColor = Color3.fromRGB(255, 255, 255),
+        textSize = 14,
+        textFont = Enum.Font.RobotoMono,
+        textalignment = Enum.TextXAlignment.Left,
+        gradient = {
+            ColorSequence = ColorSequence.new(
+                {
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)),
+                    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 255, 255))
+                }
+            ),
+            Rotation = 0
+        },
+        padding = {
+            bottom = UDim.new(0, 10),
+            left = UDim.new(0, 10),
+            right = UDim.new(0, 10),
+            top = UDim.new(0, 10)
+        },
+        anchorPoint = Vector2.new(0, 0.5),
+        size = UDim2.new(1, 0, 0, 25),
+        position = UDim2.new(0, 0, 0.5, 0)
+    },
+    cardcontent = {
+        size = UDim2.new(1, 0, 0, 30),
+        anchorPoint = Vector2.new(0.5, 0.5),
+        automaticSize = Enum.AutomaticSize.Y,
+        listlayout = {
+            padding = UDim.new(0, 4),
+            fillDirection = Enum.FillDirection.Vertical,
+            horizontalAlignment = Enum.HorizontalAlignment.Center,
+            verticalAlignment = Enum.VerticalAlignment.Top
+        },
+        padding = {
+            bottom = UDim.new(0, 4),
+            left = UDim.new(0, 0),
+            right = UDim.new(0, 0),
+            top = UDim.new(0, 0)
+        }
+    },
+    richTextLabel = {
+        textColor = Color3.fromRGB(255, 255, 255),
+        textSize = 14,
+        textFont = Enum.Font.RobotoMono,
+        textalignment = Enum.TextXAlignment.Left,
+        richText = true,
+        automaticSize = Enum.AutomaticSize.Y,
+        padding = {
+            bottom = UDim.new(0, 0),
+            left = UDim.new(0, 10),
+            right = UDim.new(0, 10),
+            top = UDim.new(0, 0)
+        },
+        size = UDim2.new(1, 0, 0, 30),
+        anchorPoint = Vector2.new(0.5, 0.5)
+    },
+    button = {
+        singlewide = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 30),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            background = Color3.fromRGB(25, 0, 0),
+            backgroundTransparency = 0.75,
+            anchorPoint = Vector2.new(0.5, 0.5),
+            position = UDim2.new(0.5, 0, 0.5, 0),
+            automaticSize = Enum.AutomaticSize.Y,
+            size = UDim2.new(0, 220, 0, 25),
+            textColor = Color3.fromRGB(255, 255, 255),
+            textSize = 14,
+            textFont = Enum.Font.RobotoMono,
+            textAlignment = Enum.TextXAlignment.Center,
+            cornerRadius = 2,
+            stroke = {
+                color = Color3.fromRGB(25, 0, 0),
+                thickness = 2,
+                strokeMode = Enum.ApplyStrokeMode.Border,
+                lineJoinMode = Enum.LineJoinMode.Round
+            }
+        },
+        subtext = {
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 12,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                padding = {
+                    bottom = UDim.new(0, 0),
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 10),
+                    top = UDim.new(0, 0)
+                },
+                size = UDim2.new(0, 240, 0, 30),
+                position = UDim2.new(0.5, 0, 0.25, 0),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            frame = {
+                size = UDim2.new(0, 240, 0, 60),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            background = Color3.fromRGB(25, 0, 0),
+            backgroundTransparency = 0.75,
+            anchorPoint = Vector2.new(0.5, 0.5),
+            position = UDim2.new(0.5, 0, 0.75, 0),
+            automaticSize = Enum.AutomaticSize.Y,
+            size = UDim2.new(0, 220, 0, 25),
+            textColor = Color3.fromRGB(255, 255, 255),
+            textSize = 14,
+            textFont = Enum.Font.RobotoMono,
+            textAlignment = Enum.TextXAlignment.Center,
+            cornerRadius = 2,
+            stroke = {
+                color = Color3.fromRGB(25, 0, 0),
+                thickness = 2,
+                strokeMode = Enum.ApplyStrokeMode.Border,
+                lineJoinMode = Enum.LineJoinMode.Round
+            }
+        }
+    },
+    toggle = {
+        frame = {
+            -- Container frame
+            size = UDim2.new(0, 240, 0, 30),
+            anchorPoint = Vector2.new(0.5, 0.5),
+            background = Color3.fromRGB(255, 255, 255),
+            backgroundTransparency = 1
+        },
+        richTextLabel = {
+            -- Left-aligned rich text label
+            textColor = Color3.fromRGB(255, 255, 255),
+            textSize = 14,
+            textFont = Enum.Font.RobotoMono,
+            textalignment = Enum.TextXAlignment.Left,
+            richText = true,
+            automaticSize = Enum.AutomaticSize.Y,
+            size = UDim2.new(0, 201, 0, 30),
+            anchorPoint = Vector2.new(0.5, 0.5),
+            position = UDim2.new(0.42977, 0, 0.5, 0),
+            padding = {
+                left = UDim.new(0, 10),
+                right = UDim.new(0, 0),
+                top = UDim.new(0, 0),
+                bottom = UDim.new(0, 0)
+            }
+        },
+        button = {
+            -- Right-side ImageButton (the checkbox)
+            background = Color3.fromRGB(26, 0, 0),
+            backgroundTransparency = 0.75,
+            anchorPoint = Vector2.new(0.5, 0.5),
+            position = UDim2.new(0.90121, 0, 0.5, 0),
+            size = UDim2.new(0, 25, 0, 25),
+            image = "rbxassetid://11604833061",
+            cornerRadius = 2,
+            stroke = {
+                color = Color3.fromRGB(26, 0, 0),
+                thickness = 2,
+                strokeMode = Enum.ApplyStrokeMode.Border,
+                lineJoinMode = Enum.LineJoinMode.Round
+            }
+        }
+    },
+    textbox = {
+        -- Label on top, input below (matches alt2inputbox)
+        subtext = {
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 240, 0, 30),
+                position = UDim2.new(0.5, 0, 0.25, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0)
+                }
+            },
+            frame = {
+                size = UDim2.new(0, 240, 0, 60),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            -- TextBox
+            background = Color3.fromRGB(26, 0, 0),
+            backgroundTransparency = 0.75,
+            anchorPoint = Vector2.new(0.5, 0.5),
+            position = UDim2.new(0.5, 0, 0.75, 0),
+            automaticSize = Enum.AutomaticSize.Y,
+            size = UDim2.new(0, 220, 0, 25),
+            textColor = Color3.fromRGB(255, 255, 255),
+            textSize = 14,
+            textFont = Enum.Font.RobotoMono,
+            textAlignment = Enum.TextXAlignment.Center,
+            placeholderColor = Color3.fromRGB(201, 201, 201),
+            placeholderText = "default text",
+            cornerRadius = 2,
+            stroke = {
+                color = Color3.fromRGB(26, 0, 0),
+                thickness = 2,
+                strokeMode = Enum.ApplyStrokeMode.Border,
+                lineJoinMode = Enum.LineJoinMode.Round
+            }
+        },
+        -- Label left, input right (matches alttextbox)
+        inline = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 30),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 115, 0, 30),
+                position = UDim2.new(0.25, 0, 0.5, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0)
+                }
+            },
+            -- TextBox
+            background = Color3.fromRGB(26, 0, 0),
+            backgroundTransparency = 0.75,
+            anchorPoint = Vector2.new(0.5, 0.5),
+            position = UDim2.new(0.72413, 0, 0.5, 0),
+            size = UDim2.new(0, 110, 0, 25),
+            textColor = Color3.fromRGB(255, 255, 255),
+            swatch = {
+                size = UDim2.new(0, 16, 0, 16),
+                position = UDim2.new(0, -20, 0.5, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                cornerRadius = 2
+            },
+            textSize = 14,
+            textFont = Enum.Font.RobotoMono,
+            textAlignment = Enum.TextXAlignment.Center,
+            placeholderColor = Color3.fromRGB(201, 201, 201),
+            placeholderText = "default text",
+            cornerRadius = 2,
+            stroke = {
+                color = Color3.fromRGB(26, 0, 0),
+                thickness = 2,
+                strokeMode = Enum.ApplyStrokeMode.Border,
+                lineJoinMode = Enum.LineJoinMode.Round
+            }
+        },
+        -- Input only, centered (matches textboxfr)
+        singlewide = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 30),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            -- TextBox
+            background = Color3.fromRGB(26, 0, 0),
+            backgroundTransparency = 0.75,
+            anchorPoint = Vector2.new(0.5, 0.5),
+            position = UDim2.new(0.5, 0, 0.5, 0),
+            automaticSize = Enum.AutomaticSize.Y,
+            size = UDim2.new(0, 220, 0, 25),
+            textColor = Color3.fromRGB(255, 255, 255),
+            textSize = 14,
+            textFont = Enum.Font.RobotoMono,
+            textAlignment = Enum.TextXAlignment.Center,
+            placeholderColor = Color3.fromRGB(201, 201, 201),
+            placeholderText = "default text",
+            cornerRadius = 2,
+            stroke = {
+                color = Color3.fromRGB(26, 0, 0),
+                thickness = 2,
+                strokeMode = Enum.ApplyStrokeMode.Border,
+                lineJoinMode = Enum.LineJoinMode.Round
+            },
+            indicator = {
+                background = Color3.fromRGB(151, 0, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                size = UDim2.new(0, 220, 0, 2),
+                position = UDim2.new(0.5, 0, 1, 0),
+                gradient = {
+                    ColorSequence = ColorSequence.new(
+                        {
+                            ColorSequenceKeypoint.new(0, Color3.fromRGB(76, 76, 76)),
+                            ColorSequenceKeypoint.new(0.25, Color3.fromRGB(151, 151, 151)),
+                            ColorSequenceKeypoint.new(0.75, Color3.fromRGB(151, 151, 151)),
+                            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(76, 76, 76))
+                        }
+                    ),
+                    Rotation = 0
+                }
+            }
+        }
+    },
+    dropdown = {
+        -- Compact inline variant: label left, button right, small items box under button
+        inline = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 30),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 115, 0, 30),
+                position = UDim2.new(0.25, 0, 0.5, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0)
+                }
+            },
+            button = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0.5),
+                position = UDim2.new(0.72413, 0, 0.5, 0),
+                size = UDim2.new(0, 110, 0, 25),
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textAlignment = Enum.TextXAlignment.Center,
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            items = {
+                background = Color3.fromRGB(16, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0),
+                position = UDim2.new(0.72413, 0, 1, 0),
+                size = UDim2.new(0, 110, 0, 48),
+                scrollBarThickness = 2,
+                scrollBarColor = Color3.fromRGB(76, 0, 0),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                },
+                listlayout = {
+                    padding = UDim.new(0, 4),
+                    horizontalAlignment = Enum.HorizontalAlignment.Center
+                },
+                itemButton = {
+                    background = Color3.fromRGB(26, 0, 0),
+                    backgroundTransparency = 0.75,
+                    size = UDim2.new(0, 110, 0, 36),
+                    textColor = Color3.fromRGB(255, 255, 255),
+                    textSize = 14,
+                    textFont = Enum.Font.RobotoMono,
+                    textAlignment = Enum.TextXAlignment.Center,
+                    cornerRadius = 2,
+                    stroke = {
+                        color = Color3.fromRGB(26, 0, 0),
+                        thickness = 2,
+                        strokeMode = Enum.ApplyStrokeMode.Border,
+                        lineJoinMode = Enum.LineJoinMode.Round
+                    }
+                }
+            }
+        },
+        -- Wide variant: label on top, wide button below, larger items box
+        subtext = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 60),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 236, 0, 30),
+                position = UDim2.new(0.50729, 0, 0.28333, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0)
+                }
+            },
+            button = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0.5),
+                position = UDim2.new(0.5, 0, 0.75, 0),
+                size = UDim2.new(0, 220, 0, 25),
+                textColor = Color3.fromRGB(255, 255, 255),
+                swatch = {
+                    size = UDim2.new(0, 16, 0, 16),
+                    position = UDim2.new(0, -20, 0.5, 0),
+                    anchorPoint = Vector2.new(0.5, 0.5),
+                    cornerRadius = 2
+                },
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textAlignment = Enum.TextXAlignment.Left,
+                paddingLeft = UDim.new(0, 8),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            items = {
+                background = Color3.fromRGB(16, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0),
+                position = UDim2.new(0.5, 0, 0.98333, 0),
+                size = UDim2.new(0, 220, 0, 150),
+                scrollBarThickness = 2,
+                scrollBarColor = Color3.fromRGB(76, 0, 0),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                },
+                listlayout = {
+                    padding = UDim.new(0, 4),
+                    horizontalAlignment = Enum.HorizontalAlignment.Center
+                },
+                itemButton = {
+                    background = Color3.fromRGB(26, 0, 0),
+                    backgroundTransparency = 0.75,
+                    size = UDim2.new(0, 220, 0, 36),
+                    textColor = Color3.fromRGB(255, 255, 255),
+                    textSize = 14,
+                    textFont = Enum.Font.RobotoMono,
+                    textAlignment = Enum.TextXAlignment.Center,
+                    cornerRadius = 2,
+                    stroke = {
+                        color = Color3.fromRGB(26, 0, 0),
+                        thickness = 2,
+                        strokeMode = Enum.ApplyStrokeMode.Border,
+                        lineJoinMode = Enum.LineJoinMode.Round
+                    }
+                }
+            }
+        }
+    },
+    colorpicker = {
+        -- Compact inline variant: label left, preview button right, panel under button
+        inline = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 30),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 115, 0, 30),
+                position = UDim2.new(0.25, 0, 0.5, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0)
+                }
+            },
+            button = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0.5),
+                position = UDim2.new(0.72413, 0, 0.5, 0),
+                size = UDim2.new(0, 110, 0, 25),
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textAlignment = Enum.TextXAlignment.Left,
+                paddingLeft = UDim.new(0, 32),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            panel = {
+                background = Color3.fromRGB(16, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0),
+                position = UDim2.new(0.724, 0, 1, 0),
+                size = UDim2.new(0, 180, 0, 130),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            sv = {
+                -- saturation/value square
+                size = UDim2.new(0, 120, 0, 90),
+                position = UDim2.new(0, 8, 0, 8),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            hue = {
+                -- vertical hue bar
+                size = UDim2.new(0, 16, 0, 90),
+                position = UDim2.new(0, 136, 0, 8),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            markers = {
+                sv = {size = UDim2.new(0, 6, 0, 6)},
+                hue = {size = UDim2.new(0, 16, 0, 2)}
+            }
+        },
+        -- Wide variant: label on top, preview button below, bigger panel
+        subtext = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 60),
+                anchorPoint = Vector2.new(0.5, 0.5)
+            },
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 236, 0, 30),
+                position = UDim2.new(0.50729, 0, 0.28333, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0)
+                }
+            },
+            button = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0.5),
+                position = UDim2.new(0.5, 0, 0.75, 0),
+                size = UDim2.new(0, 220, 0, 25),
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textAlignment = Enum.TextXAlignment.Left,
+                paddingLeft = UDim.new(0, 32),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            panel = {
+                background = Color3.fromRGB(16, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0.5, 0),
+                position = UDim2.new(0.5, 0, 0.98333, 0),
+                size = UDim2.new(0, 220, 0, 160),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            sv = {
+                -- saturation/value square
+                size = UDim2.new(0, 150, 0, 110),
+                position = UDim2.new(0, 10, 0, 8),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            hue = {
+                -- vertical hue bar
+                size = UDim2.new(0, 16, 0, 110),
+                position = UDim2.new(0, 170, 0, 8),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round
+                }
+            },
+            markers = {
+                sv = {size = UDim2.new(0, 6, 0, 6)},
+                hue = {size = UDim2.new(0, 16, 0, 2)}
+            }
+        }
+    },
+    slider = {
+        -- Subtext variant: label on top, slider + numeric input below
+        subtext = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 60),
+                anchorPoint = Vector2.new(0.5, 0.5),
+            },
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 236, 0, 30),
+                position = UDim2.new(0.50729, 0, 0.28333, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0),
+                },
+            },
+            track = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0, 0.5),
+                position = UDim2.new(0, 10, 0.75, 0),
+                size = UDim2.new(0, 160, 0, 6),
+                cornerRadius = 3,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round,
+                },
+            },
+            fill = {
+                background = Color3.fromRGB(151, 0, 0),
+                backgroundTransparency = 0,
+                gradient = {
+                    ColorSequence = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(76, 76, 76)),
+                        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(151, 151, 151)),
+                        ColorSequenceKeypoint.new(0.75, Color3.fromRGB(151, 151, 151)),
+                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(76, 76, 76)),
+                    }),
+                    Rotation = 0,
+                },
+                cornerRadius = 3,
+            },
+            thumb = {
+                size = UDim2.new(0, 12, 0, 12),
+                background = Color3.fromRGB(255, 255, 255),
+                backgroundTransparency = 0,
+                cornerRadius = 6,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 1,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round,
+                },
+            },
+            number = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(1, 0.5),
+                position = UDim2.new(1, -10, 0.75, 0),
+                size = UDim2.new(0, 56, 0, 22),
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textAlignment = Enum.TextXAlignment.Center,
+                placeholderColor = Color3.fromRGB(201, 201, 201),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round,
+                },
+            },
+        },
+        -- Inline variant: label left, track center, number input right
+        inline = {
+            frame = {
+                size = UDim2.new(0, 240, 0, 30),
+                anchorPoint = Vector2.new(0.5, 0.5),
+            },
+            richTextLabel = {
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textalignment = Enum.TextXAlignment.Left,
+                richText = true,
+                automaticSize = Enum.AutomaticSize.Y,
+                size = UDim2.new(0, 115, 0, 30),
+                position = UDim2.new(0.25, 0, 0.5, 0),
+                anchorPoint = Vector2.new(0.5, 0.5),
+                padding = {
+                    left = UDim.new(0, 10),
+                    right = UDim.new(0, 0),
+                    top = UDim.new(0, 0),
+                    bottom = UDim.new(0, 0),
+                },
+            },
+            track = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(0, 0.5),
+                -- Start just to the right of the label, leave space for the number box on the right
+                position = UDim2.new(0, 126, 0.5, 0),
+                size = UDim2.new(0, 60, 0, 6),
+                cornerRadius = 3,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round,
+                },
+            },
+            fill = {
+                background = Color3.fromRGB(151, 0, 0),
+                backgroundTransparency = 0,
+                gradient = {
+                    ColorSequence = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(76, 76, 76)),
+                        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(151, 151, 151)),
+                        ColorSequenceKeypoint.new(0.75, Color3.fromRGB(151, 151, 151)),
+                        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(76, 76, 76)),
+                    }),
+                    Rotation = 0,
+                },
+                cornerRadius = 3,
+            },
+            thumb = {
+                size = UDim2.new(0, 12, 0, 12),
+                background = Color3.fromRGB(255, 255, 255),
+                backgroundTransparency = 0,
+                cornerRadius = 6,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 1,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round,
+                },
+            },
+            number = {
+                background = Color3.fromRGB(26, 0, 0),
+                backgroundTransparency = 0.75,
+                anchorPoint = Vector2.new(1, 0.5),
+                position = UDim2.new(1, -10, 0.5, 0),
+                size = UDim2.new(0, 44, 0, 22),
+                textColor = Color3.fromRGB(255, 255, 255),
+                textSize = 14,
+                textFont = Enum.Font.RobotoMono,
+                textAlignment = Enum.TextXAlignment.Center,
+                placeholderColor = Color3.fromRGB(201, 201, 201),
+                cornerRadius = 2,
+                stroke = {
+                    color = Color3.fromRGB(26, 0, 0),
+                    thickness = 2,
+                    strokeMode = Enum.ApplyStrokeMode.Border,
+                    lineJoinMode = Enum.LineJoinMode.Round,
+                },
+            },
+        },
+    }
+}
 
 -- Centralized ZIndex hierarchy
 local Z = {
@@ -10,6 +1048,17 @@ local Z = {
     COMPONENT = 20,  -- controls inside cards and tab buttons
     POPOUT = 50,     -- dropdown lists, colorpicker panels
 }
+
+local function resolvePopoutDimensions(baseHeight, position, size)
+    baseHeight = baseHeight or 0
+    local posScale = position and position.Y and position.Y.Scale or 0
+    local posOffset = position and position.Y and position.Y.Offset or 0
+    local sizeScale = size and size.Y and size.Y.Scale or 0
+    local sizeOffset = size and size.Y and size.Y.Offset or 0
+    local topOffset = posScale * baseHeight + posOffset
+    local contentHeight = sizeScale * baseHeight + sizeOffset
+    return topOffset, contentHeight
+end
 
 local redwine = {}
 
@@ -933,7 +1982,30 @@ function redwine.new(redwineSettings)
                             end
                         end
                     end
+
                 end
+
+                local baseHeight = dtheme.frame.size.Y.Offset
+                if baseHeight == 0 then
+                    baseHeight = container:GetAttribute("PopoutBaseHeight") or container.AbsoluteSize.Y
+                end
+                local popoutTop, popoutHeight = resolvePopoutDimensions(baseHeight, dtheme.items.position, dtheme.items.size)
+                container.AutomaticSize = Enum.AutomaticSize.None
+                container:SetAttribute("PopoutBaseHeight", baseHeight)
+                container:SetAttribute("PopoutTopOffset", popoutTop)
+                container:SetAttribute("PopoutContentHeight", popoutHeight)
+                local isExpanded = container:GetAttribute("PopoutIsExpanded") or false
+                local items = container:FindFirstChild("items")
+                if items and items.ClassName == "ScrollingFrame" then
+                    items.Position = UDim2.new(dtheme.items.position.X.Scale, dtheme.items.position.X.Offset, 0, popoutTop)
+                    isExpanded = items.Visible
+                end
+                container:SetAttribute("PopoutIsExpanded", isExpanded and true or false)
+                local targetHeight = baseHeight
+                if isExpanded then
+                    targetHeight = math.max(targetHeight, popoutTop + popoutHeight)
+                end
+                container.Size = UDim2.new(dtheme.frame.size.X.Scale, dtheme.frame.size.X.Offset, 0, targetHeight)
 
                 local function updateColorpicker(container)
                     if not container or container.ClassName ~= "Frame" then return end
@@ -1018,6 +2090,27 @@ function redwine.new(redwineSettings)
                     if hueMarker and hueMarker.ClassName == "Frame" then
                         tween(hueMarker, { Size = ctheme.markers.hue.size })
                     end
+
+                    local baseHeight = ctheme.frame.size.Y.Offset
+                    if baseHeight == 0 then
+                        baseHeight = container:GetAttribute("PopoutBaseHeight") or container.AbsoluteSize.Y
+                    end
+                    local popoutTop, popoutHeight = resolvePopoutDimensions(baseHeight, ctheme.panel.position, ctheme.panel.size)
+                    container.AutomaticSize = Enum.AutomaticSize.None
+                    container:SetAttribute("PopoutBaseHeight", baseHeight)
+                    container:SetAttribute("PopoutTopOffset", popoutTop)
+                    container:SetAttribute("PopoutContentHeight", popoutHeight)
+                    local isExpanded = container:GetAttribute("PopoutIsExpanded") or false
+                    if panel and panel.ClassName == "Frame" then
+                        panel.Position = UDim2.new(ctheme.panel.position.X.Scale, ctheme.panel.position.X.Offset, 0, popoutTop)
+                        isExpanded = panel.Visible
+                    end
+                    container:SetAttribute("PopoutIsExpanded", isExpanded and true or false)
+                    local targetHeight = baseHeight
+                    if isExpanded then
+                        targetHeight = math.max(targetHeight, popoutTop + popoutHeight)
+                    end
+                    container.Size = UDim2.new(ctheme.frame.size.X.Scale, ctheme.frame.size.X.Offset, 0, targetHeight)
                 end
 
                 local function updateSlider(container)
@@ -3100,6 +4193,38 @@ function redwine.new(redwineSettings)
                     }
                 )
 
+                dd.frame.AutomaticSize = Enum.AutomaticSize.None
+                dd.frame.ClipsDescendants = false
+                local baseHeight = theme.frame.size.Y.Offset
+                if baseHeight == 0 then
+                    baseHeight = dd.frame.AbsoluteSize.Y
+                end
+                local popoutTop, popoutHeight = resolvePopoutDimensions(baseHeight, theme.items.position, theme.items.size)
+                dd.items.Position = UDim2.new(theme.items.position.X.Scale, theme.items.position.X.Offset, 0, popoutTop)
+                dd.frame:SetAttribute("PopoutBaseHeight", baseHeight)
+                dd.frame:SetAttribute("PopoutTopOffset", popoutTop)
+                dd.frame:SetAttribute("PopoutContentHeight", popoutHeight)
+                dd.frame:SetAttribute("PopoutIsExpanded", false)
+
+                local function refreshDropdownHeight()
+                    local activeTheme = (window.theme.dropdown and window.theme.dropdown[variant]) or theme
+                    local baseAttr = dd.frame:GetAttribute("PopoutBaseHeight") or activeTheme.frame.size.Y.Offset or baseHeight
+                    local topAttr = dd.frame:GetAttribute("PopoutTopOffset") or popoutTop
+                    local heightAttr = dd.frame:GetAttribute("PopoutContentHeight") or popoutHeight
+                    local expanded = dd.items.Visible
+                    dd.frame:SetAttribute("PopoutIsExpanded", expanded)
+                    local targetHeight = baseAttr
+                    if expanded then
+                        targetHeight = math.max(targetHeight, topAttr + heightAttr)
+                    end
+                    dd.frame.Size = UDim2.new(activeTheme.frame.size.X.Scale, activeTheme.frame.size.X.Offset, 0, targetHeight)
+                end
+
+                refreshDropdownHeight()
+
+                dd._popoutConn =
+                    dd.items:GetPropertyChangedSignal("Visible"):Connect(refreshDropdownHeight)
+
                 -- populate items
                 local function toggleValue(val)
                     if dd.settings.multi then
@@ -3119,6 +4244,7 @@ function redwine.new(redwineSettings)
                     else
                         dd.selected = {val}
                         dd.items.Visible = false
+                        refreshDropdownHeight()
                     end
                     dd.button.Text = formatButtonText()
                     if dd.settings.onChanged then
@@ -3226,6 +4352,7 @@ function redwine.new(redwineSettings)
                 dd.button.MouseButton1Click:Connect(
                     function()
                         dd.items.Visible = not dd.items.Visible
+                        refreshDropdownHeight()
                     end
                 )
 
@@ -3278,6 +4405,9 @@ function redwine.new(redwineSettings)
                 function dd:destroy()
                     if self._outsideConn then
                         self._outsideConn:Disconnect()
+                    end
+                    if self._popoutConn then
+                        self._popoutConn:Disconnect()
                     end
                     if self.frame then
                         self.frame:Destroy()
@@ -3540,6 +4670,37 @@ function redwine.new(redwineSettings)
                     theme.panel.stroke.lineJoinMode
                 )
 
+                cp.frame.AutomaticSize = Enum.AutomaticSize.None
+                cp.frame.ClipsDescendants = false
+                local baseHeight = theme.frame.size.Y.Offset
+                if baseHeight == 0 then
+                    baseHeight = cp.frame.AbsoluteSize.Y
+                end
+                local panelTop, panelHeight = resolvePopoutDimensions(baseHeight, theme.panel.position, theme.panel.size)
+                cp.panel.Position = UDim2.new(theme.panel.position.X.Scale, theme.panel.position.X.Offset, 0, panelTop)
+                cp.frame:SetAttribute("PopoutBaseHeight", baseHeight)
+                cp.frame:SetAttribute("PopoutTopOffset", panelTop)
+                cp.frame:SetAttribute("PopoutContentHeight", panelHeight)
+                cp.frame:SetAttribute("PopoutIsExpanded", false)
+
+                local function refreshColorpickerHeight()
+                    local activeTheme = (window.theme.colorpicker and window.theme.colorpicker[variant]) or theme
+                    local baseAttr = cp.frame:GetAttribute("PopoutBaseHeight") or activeTheme.frame.size.Y.Offset or baseHeight
+                    local topAttr = cp.frame:GetAttribute("PopoutTopOffset") or panelTop
+                    local heightAttr = cp.frame:GetAttribute("PopoutContentHeight") or panelHeight
+                    local expanded = cp.panel.Visible
+                    cp.frame:SetAttribute("PopoutIsExpanded", expanded)
+                    local targetHeight = baseAttr
+                    if expanded then
+                        targetHeight = math.max(targetHeight, topAttr + heightAttr)
+                    end
+                    cp.frame.Size = UDim2.new(activeTheme.frame.size.X.Scale, activeTheme.frame.size.X.Offset, 0, targetHeight)
+                end
+
+                refreshColorpickerHeight()
+
+                cp._popoutConn = cp.panel:GetPropertyChangedSignal("Visible"):Connect(refreshColorpickerHeight)
+
                 -- SV square: base = hue color, plus white and black gradients
                 cp.sv =
                     helpers.createInstance(
@@ -3787,6 +4948,7 @@ function redwine.new(redwineSettings)
                 cp.button.MouseButton1Click:Connect(
                     function()
                         cp.panel.Visible = not cp.panel.Visible
+                        refreshColorpickerHeight()
                     end
                 )
 
@@ -3813,6 +4975,7 @@ function redwine.new(redwineSettings)
                             local x, y = pos.X, pos.Y
                             if not pointInFrame(cp.button, x, y) and not pointInFrame(cp.panel, x, y) then
                                 cp.panel.Visible = false
+                                refreshColorpickerHeight()
                             end
                         end
                     )
@@ -3835,6 +4998,9 @@ function redwine.new(redwineSettings)
                     end
                     if self._moveConn then
                         self._moveConn:Disconnect()
+                    end
+                    if self._popoutConn then
+                        self._popoutConn:Disconnect()
                     end
                     if self.frame then
                         self.frame:Destroy()
