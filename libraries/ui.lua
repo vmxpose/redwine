@@ -2931,7 +2931,8 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
-                        Parent = card.content
+                        Parent = card.content,
+                        AutomaticSize = Enum.AutomaticSize.Y
                     }
                 )
 
@@ -3349,7 +3350,8 @@ function redwine.new(redwineSettings)
                         BackgroundColor3 = Color3.fromRGB(255, 255, 255),
                         BackgroundTransparency = 1,
                         BorderSizePixel = 0,
-                        Parent = card.content
+                        Parent = card.content,
+                        AutomaticSize = Enum.AutomaticSize.Y
                     }
                 )
 
